@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>目标跟踪算法</title>
+    <url>/2023/05/15/%E7%9B%AE%E6%A0%87%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="目标跟踪算法"><a href="#目标跟踪算法" class="headerlink" title="目标跟踪算法"></a>目标跟踪算法</h1><ul>
+<li><h4 id="MAATrack"><a href="#MAATrack" class="headerlink" title="MAATrack"></a><strong>MAATrack</strong></h4><ul>
+<li>特点：速率快，可达189.1FPS</li>
+</ul>
+</li>
+<li><h4 id="ByteTrack"><a href="#ByteTrack" class="headerlink" title="ByteTrack"></a><strong>ByteTrack</strong></h4><ul>
+<li>特点：速率适中，29.6FPS，性能要稍好于MAATrack</li>
+<li>yolox+bytetrack训练自己的数据集：<a href="https://blog.csdn.net/Ddddd4431/article/details/126910083">https://blog.csdn.net/Ddddd4431/article/details/126910083</a></li>
+<li>将对应的检测器换成yolov5：<ul>
+<li><a href="https://www.ngui.cc/51cto/show-544748.html?action=onClick">https://www.ngui.cc/51cto/show-544748.html?action=onClick</a></li>
+<li><a href="https://blog.csdn.net/qq_56728342/article/details/127552582">https://blog.csdn.net/qq_56728342/article/details/127552582</a></li>
+<li><a href="https://blog.csdn.net/wjpwjpwjp0831/article/details/126398459?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-126398459-blog-127463967.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~Rate-1-126398459-blog-127463967.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=1">https://blog.csdn.net/wjpwjpwjp0831/article/details/126398459?spm=1001.2101.3001.6661.1&amp;utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-126398459-blog-127463967.pc_relevant_multi_platform_whitelistv3&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-126398459-blog-127463967.pc_relevant_multi_platform_whitelistv3&amp;utm_relevant_index=1</a></li>
+</ul>
+</li>
+<li>原理讲解<ul>
+<li><a href="https://blog.csdn.net/kuweicai/article/details/120873335">https://blog.csdn.net/kuweicai/article/details/120873335</a> 其中的ByteTrack流程图值得一看</li>
+<li>卡尔曼原理讲解：<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/196622890">https://zhuanlan.zhihu.com/p/196622890</a></li>
+<li><a href="https://blog.csdn.net/qq_39523365/article/details/109094713">https://blog.csdn.net/qq_39523365/article/details/109094713</a> 对于变量的解释到位</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h4 id="DeepSort-x2F-StrongSort"><a href="#DeepSort-x2F-StrongSort" class="headerlink" title="DeepSort &#x2F; StrongSort"></a>DeepSort &#x2F; StrongSort</h4><ul>
+<li>deepsort各个性能看上去都比较一般</li>
+<li>strongsort在性能上更优，但是检测速率太低，7.1FPS</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>毕业设计相关</category>
+      </categories>
+      <tags>
+        <tag>[object Object]</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>YOLO知识储备</title>
+    <url>/2023/05/15/YOLO%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/</url>
+    <content><![CDATA[<h1 id="YOLO知识储备"><a href="#YOLO知识储备" class="headerlink" title="YOLO知识储备"></a>YOLO知识储备</h1><h3 id="论文-or-idea"><a href="#论文-or-idea" class="headerlink" title="论文 or idea"></a>论文 or idea</h3><ul>
+<li><h4 id="YOLO全系列汇总"><a href="#YOLO全系列汇总" class="headerlink" title="YOLO全系列汇总"></a><strong>YOLO全系列汇总</strong></h4><p><a href="https://blog.csdn.net/weixin_43662553/article/details/126392748">https://blog.csdn.net/weixin_43662553/article/details/126392748</a></p>
+<p><a href="https://blog.csdn.net/qq_37541097/article/details/123594351">https://blog.csdn.net/qq_37541097/article/details/123594351</a> YOLOv5s网络详解</p>
+</li>
+<li><h4 id="小目标检测发展总结"><a href="#小目标检测发展总结" class="headerlink" title="小目标检测发展总结"></a><strong>小目标检测发展总结</strong></h4><p><a href="https://zhuanlan.zhihu.com/p/398546919?utm_medium=social&utm_oi=785514747658375168">https://zhuanlan.zhihu.com/p/398546919?utm_medium=social&amp;utm_oi=785514747658375168</a></p>
+</li>
+<li><h4 id="骨干网络改进"><a href="#骨干网络改进" class="headerlink" title="骨干网络改进"></a>骨干网络改进</h4><ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>加入了SPD模块，用以替代步长为2的卷积操作，以更好地保留信息（GFLOPs增加的有点多，有效果）</strong></p>
+<p><a href="https://blog.csdn.net/qq_38668236/article/details/127428204">https://blog.csdn.net/qq_38668236/article/details/127428204</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+Ghost-Conv代替普通卷积</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+自校正卷积代替普通卷积（效果不好）</p>
+<p><a href="https://blog.csdn.net/weixin_42108775/article/details/107905004">https://blog.csdn.net/weixin_42108775/article/details/107905004</a></p>
+</li>
+</ul>
+</li>
+<li><h4 id="Neck改进"><a href="#Neck改进" class="headerlink" title="Neck改进"></a>Neck改进</h4><ul>
+<li><p><input disabled="" type="checkbox"> 
+SFPN</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+SSPNet</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+CEFPN (效果不好)</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+ABAM-FPN (效果不好)</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+TPH-YOLOv5 在Neck中加入Trans模块 和 CBAM模块 的思路可以参考（效果不好）</p>
+<p><a href="https://zhuanlan.zhihu.com/p/414436190">https://zhuanlan.zhihu.com/p/414436190</a></p>
+<p><a href="https://github.com/cv516Buaa/tph-yolov5/blob/main/README.md">https://github.com/cv516Buaa/tph-yolov5/blob/main/README.md</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+引入特征细化网络，重建检测颈部网络（源码复杂。。）</p>
+<p><a href="https://blog.csdn.net/weixin_44782087/article/details/126458534">https://blog.csdn.net/weixin_44782087/article/details/126458534</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+使用Swin-Transformer小目标检测头（效果不好）</p>
+<p><a href="https://blog.csdn.net/qq_38668236/article/details/127520592">https://blog.csdn.net/qq_38668236/article/details/127520592</a></p>
+<p><a href="https://blog.csdn.net/qq_38668236/article/details/126735107">https://blog.csdn.net/qq_38668236/article/details/126735107</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+ASFF- 自适应空间特征融合（参数量和GFLOPs增加的有点多，效果不好）</p>
+<p>代码：<a href="https://blog.csdn.net/m0_52587978/article/details/127639341">https://blog.csdn.net/m0_52587978/article/details/127639341</a></p>
+<p>原理：<a href="https://blog.csdn.net/TJMtaotao/article/details/103216377">https://blog.csdn.net/TJMtaotao/article/details/103216377</a></p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>应用轻量级通用上采样算子CARAFE（有效果）</strong><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221130154752829.png" alt="image-20221130154752829"></p>
+<p><a href="https://blog.csdn.net/weixin_43694096/article/details/126148795">https://blog.csdn.net/weixin_43694096/article/details/126148795</a> 简单介绍后直接上用法</p>
+<p><a href="https://zhuanlan.zhihu.com/p/510018864">https://zhuanlan.zhihu.com/p/510018864</a> 基本是原文翻译</p>
+<p><strong>基本步骤可以分为2步：</strong></p>
+<p><u>1）根据每个目标位置的内容来预测一个重组核</u><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221207204800870.png" alt="image-20221207204800870"></p>
+<p>​	Kernel Prediction Module负责以内容感知的方式生成重组核，该模块由3个功能单元组成：</p>
+<ol>
+<li><p>Channel Compressor通道压缩</p>
+</li>
+<li><p>Content Encoder内容编码</p>
+</li>
+<li><p>Kernel Normalizer正则化组成</p>
+</li>
+</ol>
+<p><u>2）使用预测的重组核对特征进行重组</u><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221207211031538.png" alt="image-20221207211031538"></p>
+<p>​</p>
+</li>
+</ul>
+<p>	</p>
+</li>
+<li><h4 id="IoU改进"><a href="#IoU改进" class="headerlink" title="IoU改进"></a>IoU改进</h4><ul>
+<li><p><input disabled="" type="checkbox"> 
+摈弃IoU base，使用NWD度量</p>
+<p><a href="https://blog.csdn.net/amusi1994/article/details/121413837">https://blog.csdn.net/amusi1994/article/details/121413837</a></p>
+<p><a href="https://github.com/jwwangchn/NWD">https://github.com/jwwangchn/NWD</a></p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>使用CIoU代替IoU</strong></p>
+<p><a href="https://blog.csdn.net/z240626191s/article/details/125322139">https://blog.csdn.net/z240626191s/article/details/125322139</a></p>
+</li>
+</ul>
+</li>
+<li><h4 id="yolo-head改进"><a href="#yolo-head改进" class="headerlink" title="yolo head改进"></a>yolo head改进</h4><ul>
+<li><p><input disabled="" type="checkbox"> 
+通过改进yoloHead来增强小目标的检测精度</p>
+<p><a href="https://zhuanlan.zhihu.com/p/526165005">https://zhuanlan.zhihu.com/p/526165005</a></p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>增加一个小目标检测层（配合SPD使用效果不好，一起使用有一定的提升）</strong></p>
+<p><a href="https://mp.weixin.qq.com/s/3ecefgmOZU-zugMdMWlTaA">https://mp.weixin.qq.com/s/3ecefgmOZU-zugMdMWlTaA</a></p>
+</li>
+</ul>
+</li>
+<li><h4 id="其他改进"><a href="#其他改进" class="headerlink" title="其他改进"></a>其他改进</h4><ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>小目标图像增强方式</strong></p>
+<ul>
+<li><p>形态学分割+局部对比度确认</p>
+<p>从单通道的图片转换成三通道的图片，方案：</p>
+<ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<u>B - 原图，G - 多尺度滤波图，R - 多尺度分割图（取最大值）（效果不好）</u></p>
+<p>分析原因：背景噪声太强时，恒虚景分割会导致目标被滤掉，背景反而被留下</p>
+</li>
+<li><p><input disabled="" type="checkbox"> </p>
+</li>
+</ul>
+</li>
+<li><p>SAHI强化</p>
+<p><a href="https://huaweicloud.csdn.net/63807f85dacf622b8df89054.html">https://huaweicloud.csdn.net/63807f85dacf622b8df89054.html</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/414127886">https://zhuanlan.zhihu.com/p/414127886</a></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h4 id="上下采样理论相关"><a href="#上下采样理论相关" class="headerlink" title="上下采样理论相关"></a>上下采样理论相关</h4><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/94477174">https://zhuanlan.zhihu.com/p/94477174</a> 上下采样无用论</li>
+</ul>
+</li>
+</ul>
+<h3 id="性能相关设置"><a href="#性能相关设置" class="headerlink" title="性能相关设置"></a>性能相关设置</h3><ul>
+<li><p><input disabled="" type="checkbox"> 
+显示目标由哪一层检出</p>
+<p>没有找到资料，但应该在NMS之前</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>TensorBoard实时查看训练曲线</strong></p>
+<p><a href="https://blog.csdn.net/LWD19981223/article/details/127558739">https://blog.csdn.net/LWD19981223/article/details/127558739</a> autoDL上打开</p>
+<p>踩坑记录：</p>
+<p>输入指令时，AutoDL上tensorboard对应的端口是6007，因此输入指令的时候应该是<code>--port 6007</code></p>
+<p>另外，想要实时监视就需要拿到对应的event文件，yolov5s官方源码默认保存在runs&#x2F;tarins&#x2F;exp(n)中，因此<code>--logdir xxx</code></p>
+<p>完整的指令：</p>
+<p><code>ps -ef | grep tensorboard | awk &#39;&#123;print $2&#125;&#39; | xargs kill -9</code></p>
+<p><code>tensorboard --port 6007 --logdir /root/autodl-tmp/yolov5s-offcial-master/runs/train/exp2/</code></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+可视化工具汇总</p>
+<p><a href="https://blog.csdn.net/manzubaolong/article/details/109241086">https://blog.csdn.net/manzubaolong/article/details/109241086</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/60753993">https://zhuanlan.zhihu.com/p/60753993</a> </p>
+<p><a href="https://blog.csdn.net/qq_40231159/article/details/118270178">https://blog.csdn.net/qq_40231159/article/details/118270178</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+gard-cam热力图可视化</p>
+<p><a href="https://blog.csdn.net/allrubots/article/details/127408647">https://blog.csdn.net/allrubots/article/details/127408647</a></p>
+<p><a href="https://github.com/jacobgil/pytorch-grad-cam">https://github.com/jacobgil/pytorch-grad-cam</a></p>
+<p><a href="https://blog.csdn.net/sinat_39307513/article/details/123204589">https://blog.csdn.net/sinat_39307513/article/details/123204589</a> 特征图可视化中，梯度计算的原理</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>中间层的特征图可视化</strong></p>
+<p>（done）<a href="https://blog.csdn.net/qq_40231159/article/details/118270178">https://blog.csdn.net/qq_40231159/article/details/118270178</a> <strong>代码是将Tensor转为PIL，再通过matplotlib保存特征图</strong></p>
+<p>yolov5官方源码中内置了这种特征图可视化方法，最终的生成如下：<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221203204331039.png" alt="image-20221203204331039"></p>
+<p>stage25是增加的小目标检测层，可以看到，小目标在该层上的保留效果较好，对应的函数（感觉可以做一个squeeze）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">feature_visualization</span>(<span class="params">x, module_type, stage, n=<span class="number">32</span>, save_dir=Path(<span class="params"><span class="string">&#x27;runs/detect/exp&#x27;</span></span>)</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><a href="https://discuss.pytorch.org/t/understanding-deep-network-visualize-weights/2060">https://discuss.pytorch.org/t/understanding-deep-network-visualize-weights/2060</a> 论坛中由许多可视化的方法</p>
+<p><a href="https://zhuanlan.zhihu.com/p/559714437">https://zhuanlan.zhihu.com/p/559714437</a> 针对yolo的可视化方法</p>
+<p><a href="https://github.com/open-mmlab/mmyolo">https://github.com/open-mmlab/mmyolo</a> mmyolo</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>显示mAP0.60，mAP0.75</strong></p>
+<p><a href="https://blog.csdn.net/baidu_40960780/article/details/127843324">https://blog.csdn.net/baidu_40960780/article/details/127843324</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+使用C++ opencv自己画框并设置标签</p>
+<p><a href="https://www.cnblogs.com/codingbigdog/p/16466816.html">https://www.cnblogs.com/codingbigdog/p/16466816.html</a></p>
+</li>
+</ul>
+<h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><ul>
+<li>连续多帧小目标图像，值得关注<ul>
+<li><a href="https://www.scidb.cn/en/cstr/31253.11.sciencedb.j00001.00231">https://www.scidb.cn/en/cstr/31253.11.sciencedb.j00001.00231</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="平台"><a href="#平台" class="headerlink" title="平台"></a>平台</h3><ul>
+<li><p>网络模型查看 - netron<br><a href="https://netron.app/">https://netron.app/</a></p>
+</li>
+<li><p>GPU租用平台<br><a href="https://www.autodl.com/home">https://www.autodl.com/home</a></p>
+</li>
+<li><p>标注</p>
+<p>使用 Github 上的开源软件 LabelImg 进行标注</p>
+</li>
+<li><p>论文解读</p>
+<p><a href="https://www.aminer.cn/">https://www.aminer.cn/</a></p>
+</li>
+<li><p>论文+代码检索</p>
+<p><a href="https://paperswithcode.com/">https://paperswithcode.com/</a></p>
+</li>
+<li><p><strong>针对小目标的魔改大全</strong></p>
+<p><a href="https://zhuanlan.zhihu.com/p/231168560">https://zhuanlan.zhihu.com/p/231168560</a></p>
+</li>
+</ul>
+<h3 id="代码或其他要点"><a href="#代码或其他要点" class="headerlink" title="代码或其他要点"></a>代码或其他要点</h3><ul>
+<li><p>通过pth生成onnx</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> yolo <span class="keyword">import</span> YOLO</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    yoloModel = YOLO().net</span><br><span class="line">    inputs_x = torch.randn((<span class="number">1</span>, <span class="number">3</span>, <span class="number">640</span>, <span class="number">640</span>), requires_grad=<span class="literal">True</span>)</span><br><span class="line">    torch.onnx.export(yoloModel, inputs_x, <span class="string">&quot;yolov5_ABAM.onnx&quot;</span>, verbose=<span class="literal">False</span>, opset_version=<span class="number">12</span>,</span><br><span class="line">                      input_names=[<span class="string">&#x27;image&#x27;</span>], output_names=[<span class="string">&#x27;out0&#x27;</span>, <span class="string">&#x27;out1&#x27;</span>, <span class="string">&#x27;out2&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>断点训练&#x2F;继续训练</p>
+<p>例如<code>python train.py --resume runs/train/exp/weights/last.pt</code></p>
+<p>&#x3D;&#x3D;注意需要先CD到对应的工程目录下！&#x3D;&#x3D;</p>
+</li>
+</ul>
+<h3 id="目标期刊"><a href="#目标期刊" class="headerlink" title="目标期刊"></a>目标期刊</h3><ul>
+<li>计算机学报                          ISSN：0254-4164</li>
+<li>北京航空航天大学学报       ISSN：1001-5965</li>
+<li>红外技术                              ISSN：1001-8891</li>
+<li>红外与激光工程                  ISSN：1007-2276</li>
+<li>Romote Sensing                <a href="https://www.mdpi.com/journal/remotesensing">https://www.mdpi.com/journal/remotesensing</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>毕业设计相关</category>
+      </categories>
+      <tags>
+        <tag>YOLO</tag>
+      </tags>
+  </entry>
+</search>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="包含着YOLO的改进方法，以及一些测评方法，例如热力图可视化等，还有一些数据集以及平台的节介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YOLO知识储备">
+<meta property="og:url" content="http://example.com/2023/05/15/YOLO%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/index.html">
+<meta property="og:site_name" content="Yuusya NoteBook">
+<meta property="og:description" content="包含着YOLO的改进方法，以及一些测评方法，例如热力图可视化等，还有一些数据集以及平台的节介绍">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221130154752829.png">
+<meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221207204800870.png">
+<meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221207211031538.png">
+<meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221203204331039.png">
+<meta property="article:published_time" content="2023-05-15T12:57:09.767Z">
+<meta property="article:modified_time" content="2023-05-15T14:30:53.692Z">
+<meta property="article:author" content="Yuusya">
+<meta property="article:tag" content="YOLO">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221130154752829.png">
+
+<link rel="canonical" href="http://example.com/2023/05/15/YOLO%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>YOLO知识储备 | Yuusya NoteBook</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Yuusya NoteBook</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">制心一处, 无事不办</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/15/YOLO%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.png">
+      <meta itemprop="name" content="Yuusya">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuusya NoteBook">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          YOLO知识储备
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-15 20:57:09 / 修改时间：22:30:53" itemprop="dateCreated datePublished" datetime="2023-05-15T20:57:09+08:00">2023-05-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">毕业设计相关</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">包含着YOLO的改进方法，以及一些测评方法，例如热力图可视化等，还有一些数据集以及平台的节介绍</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="YOLO知识储备"><a href="#YOLO知识储备" class="headerlink" title="YOLO知识储备"></a>YOLO知识储备</h1><h3 id="论文-or-idea"><a href="#论文-or-idea" class="headerlink" title="论文 or idea"></a>论文 or idea</h3><ul>
+<li><h4 id="YOLO全系列汇总"><a href="#YOLO全系列汇总" class="headerlink" title="YOLO全系列汇总"></a><strong>YOLO全系列汇总</strong></h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43662553/article/details/126392748">https://blog.csdn.net/weixin_43662553/article/details/126392748</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37541097/article/details/123594351">https://blog.csdn.net/qq_37541097/article/details/123594351</a> YOLOv5s网络详解</p>
+</li>
+<li><h4 id="小目标检测发展总结"><a href="#小目标检测发展总结" class="headerlink" title="小目标检测发展总结"></a><strong>小目标检测发展总结</strong></h4><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/398546919?utm_medium=social&utm_oi=785514747658375168">https://zhuanlan.zhihu.com/p/398546919?utm_medium=social&amp;utm_oi=785514747658375168</a></p>
+</li>
+<li><h4 id="骨干网络改进"><a href="#骨干网络改进" class="headerlink" title="骨干网络改进"></a>骨干网络改进</h4><ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>加入了SPD模块，用以替代步长为2的卷积操作，以更好地保留信息（GFLOPs增加的有点多，有效果）</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38668236/article/details/127428204">https://blog.csdn.net/qq_38668236/article/details/127428204</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+Ghost-Conv代替普通卷积</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+自校正卷积代替普通卷积（效果不好）</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42108775/article/details/107905004">https://blog.csdn.net/weixin_42108775/article/details/107905004</a></p>
+</li>
+</ul>
+</li>
+<li><h4 id="Neck改进"><a href="#Neck改进" class="headerlink" title="Neck改进"></a>Neck改进</h4><ul>
+<li><p><input disabled="" type="checkbox"> 
+SFPN</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+SSPNet</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+CEFPN (效果不好)</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+ABAM-FPN (效果不好)</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+TPH-YOLOv5 在Neck中加入Trans模块 和 CBAM模块 的思路可以参考（效果不好）</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/414436190">https://zhuanlan.zhihu.com/p/414436190</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/cv516Buaa/tph-yolov5/blob/main/README.md">https://github.com/cv516Buaa/tph-yolov5/blob/main/README.md</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+引入特征细化网络，重建检测颈部网络（源码复杂。。）</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44782087/article/details/126458534">https://blog.csdn.net/weixin_44782087/article/details/126458534</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+使用Swin-Transformer小目标检测头（效果不好）</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38668236/article/details/127520592">https://blog.csdn.net/qq_38668236/article/details/127520592</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38668236/article/details/126735107">https://blog.csdn.net/qq_38668236/article/details/126735107</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+ASFF- 自适应空间特征融合（参数量和GFLOPs增加的有点多，效果不好）</p>
+<p>代码：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_52587978/article/details/127639341">https://blog.csdn.net/m0_52587978/article/details/127639341</a></p>
+<p>原理：<a target="_blank" rel="noopener" href="https://blog.csdn.net/TJMtaotao/article/details/103216377">https://blog.csdn.net/TJMtaotao/article/details/103216377</a></p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>应用轻量级通用上采样算子CARAFE（有效果）</strong><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221130154752829.png" alt="image-20221130154752829"></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43694096/article/details/126148795">https://blog.csdn.net/weixin_43694096/article/details/126148795</a> 简单介绍后直接上用法</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/510018864">https://zhuanlan.zhihu.com/p/510018864</a> 基本是原文翻译</p>
+<p><strong>基本步骤可以分为2步：</strong></p>
+<p><u>1）根据每个目标位置的内容来预测一个重组核</u><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221207204800870.png" alt="image-20221207204800870"></p>
+<p>​	Kernel Prediction Module负责以内容感知的方式生成重组核，该模块由3个功能单元组成：</p>
+<ol>
+<li><p>Channel Compressor通道压缩</p>
+</li>
+<li><p>Content Encoder内容编码</p>
+</li>
+<li><p>Kernel Normalizer正则化组成</p>
+</li>
+</ol>
+<p><u>2）使用预测的重组核对特征进行重组</u><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221207211031538.png" alt="image-20221207211031538"></p>
+<p>​</p>
+</li>
+</ul>
+<p>	</p>
+</li>
+<li><h4 id="IoU改进"><a href="#IoU改进" class="headerlink" title="IoU改进"></a>IoU改进</h4><ul>
+<li><p><input disabled="" type="checkbox"> 
+摈弃IoU base，使用NWD度量</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/amusi1994/article/details/121413837">https://blog.csdn.net/amusi1994/article/details/121413837</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/jwwangchn/NWD">https://github.com/jwwangchn/NWD</a></p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>使用CIoU代替IoU</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/z240626191s/article/details/125322139">https://blog.csdn.net/z240626191s/article/details/125322139</a></p>
+</li>
+</ul>
+</li>
+<li><h4 id="yolo-head改进"><a href="#yolo-head改进" class="headerlink" title="yolo head改进"></a>yolo head改进</h4><ul>
+<li><p><input disabled="" type="checkbox"> 
+通过改进yoloHead来增强小目标的检测精度</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/526165005">https://zhuanlan.zhihu.com/p/526165005</a></p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>增加一个小目标检测层（配合SPD使用效果不好，一起使用有一定的提升）</strong></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3ecefgmOZU-zugMdMWlTaA">https://mp.weixin.qq.com/s/3ecefgmOZU-zugMdMWlTaA</a></p>
+</li>
+</ul>
+</li>
+<li><h4 id="其他改进"><a href="#其他改进" class="headerlink" title="其他改进"></a>其他改进</h4><ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>小目标图像增强方式</strong></p>
+<ul>
+<li><p>形态学分割+局部对比度确认</p>
+<p>从单通道的图片转换成三通道的图片，方案：</p>
+<ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<u>B - 原图，G - 多尺度滤波图，R - 多尺度分割图（取最大值）（效果不好）</u></p>
+<p>分析原因：背景噪声太强时，恒虚景分割会导致目标被滤掉，背景反而被留下</p>
+</li>
+<li><p><input disabled="" type="checkbox"> </p>
+</li>
+</ul>
+</li>
+<li><p>SAHI强化</p>
+<p><a target="_blank" rel="noopener" href="https://huaweicloud.csdn.net/63807f85dacf622b8df89054.html">https://huaweicloud.csdn.net/63807f85dacf622b8df89054.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/414127886">https://zhuanlan.zhihu.com/p/414127886</a></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h4 id="上下采样理论相关"><a href="#上下采样理论相关" class="headerlink" title="上下采样理论相关"></a>上下采样理论相关</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/94477174">https://zhuanlan.zhihu.com/p/94477174</a> 上下采样无用论</li>
+</ul>
+</li>
+</ul>
+<h3 id="性能相关设置"><a href="#性能相关设置" class="headerlink" title="性能相关设置"></a>性能相关设置</h3><ul>
+<li><p><input disabled="" type="checkbox"> 
+显示目标由哪一层检出</p>
+<p>没有找到资料，但应该在NMS之前</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>TensorBoard实时查看训练曲线</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/LWD19981223/article/details/127558739">https://blog.csdn.net/LWD19981223/article/details/127558739</a> autoDL上打开</p>
+<p>踩坑记录：</p>
+<p>输入指令时，AutoDL上tensorboard对应的端口是6007，因此输入指令的时候应该是<code>--port 6007</code></p>
+<p>另外，想要实时监视就需要拿到对应的event文件，yolov5s官方源码默认保存在runs&#x2F;tarins&#x2F;exp(n)中，因此<code>--logdir xxx</code></p>
+<p>完整的指令：</p>
+<p><code>ps -ef | grep tensorboard | awk &#39;&#123;print $2&#125;&#39; | xargs kill -9</code></p>
+<p><code>tensorboard --port 6007 --logdir /root/autodl-tmp/yolov5s-offcial-master/runs/train/exp2/</code></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+可视化工具汇总</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/manzubaolong/article/details/109241086">https://blog.csdn.net/manzubaolong/article/details/109241086</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/60753993">https://zhuanlan.zhihu.com/p/60753993</a> </p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40231159/article/details/118270178">https://blog.csdn.net/qq_40231159/article/details/118270178</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+gard-cam热力图可视化</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/allrubots/article/details/127408647">https://blog.csdn.net/allrubots/article/details/127408647</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/jacobgil/pytorch-grad-cam">https://github.com/jacobgil/pytorch-grad-cam</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_39307513/article/details/123204589">https://blog.csdn.net/sinat_39307513/article/details/123204589</a> 特征图可视化中，梯度计算的原理</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>中间层的特征图可视化</strong></p>
+<p>（done）<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40231159/article/details/118270178">https://blog.csdn.net/qq_40231159/article/details/118270178</a> <strong>代码是将Tensor转为PIL，再通过matplotlib保存特征图</strong></p>
+<p>yolov5官方源码中内置了这种特征图可视化方法，最终的生成如下：<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221203204331039.png" alt="image-20221203204331039"></p>
+<p>stage25是增加的小目标检测层，可以看到，小目标在该层上的保留效果较好，对应的函数（感觉可以做一个squeeze）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">feature_visualization</span>(<span class="params">x, module_type, stage, n=<span class="number">32</span>, save_dir=Path(<span class="params"><span class="string">&#x27;runs/detect/exp&#x27;</span></span>)</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><a target="_blank" rel="noopener" href="https://discuss.pytorch.org/t/understanding-deep-network-visualize-weights/2060">https://discuss.pytorch.org/t/understanding-deep-network-visualize-weights/2060</a> 论坛中由许多可视化的方法</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/559714437">https://zhuanlan.zhihu.com/p/559714437</a> 针对yolo的可视化方法</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/open-mmlab/mmyolo">https://github.com/open-mmlab/mmyolo</a> mmyolo</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+<strong>显示mAP0.60，mAP0.75</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/baidu_40960780/article/details/127843324">https://blog.csdn.net/baidu_40960780/article/details/127843324</a></p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+使用C++ opencv自己画框并设置标签</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/codingbigdog/p/16466816.html">https://www.cnblogs.com/codingbigdog/p/16466816.html</a></p>
+</li>
+</ul>
+<h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><ul>
+<li>连续多帧小目标图像，值得关注<ul>
+<li><a target="_blank" rel="noopener" href="https://www.scidb.cn/en/cstr/31253.11.sciencedb.j00001.00231">https://www.scidb.cn/en/cstr/31253.11.sciencedb.j00001.00231</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="平台"><a href="#平台" class="headerlink" title="平台"></a>平台</h3><ul>
+<li><p>网络模型查看 - netron<br><a target="_blank" rel="noopener" href="https://netron.app/">https://netron.app/</a></p>
+</li>
+<li><p>GPU租用平台<br><a target="_blank" rel="noopener" href="https://www.autodl.com/home">https://www.autodl.com/home</a></p>
+</li>
+<li><p>标注</p>
+<p>使用 Github 上的开源软件 LabelImg 进行标注</p>
+</li>
+<li><p>论文解读</p>
+<p><a target="_blank" rel="noopener" href="https://www.aminer.cn/">https://www.aminer.cn/</a></p>
+</li>
+<li><p>论文+代码检索</p>
+<p><a target="_blank" rel="noopener" href="https://paperswithcode.com/">https://paperswithcode.com/</a></p>
+</li>
+<li><p><strong>针对小目标的魔改大全</strong></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/231168560">https://zhuanlan.zhihu.com/p/231168560</a></p>
+</li>
+</ul>
+<h3 id="代码或其他要点"><a href="#代码或其他要点" class="headerlink" title="代码或其他要点"></a>代码或其他要点</h3><ul>
+<li><p>通过pth生成onnx</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> yolo <span class="keyword">import</span> YOLO</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    yoloModel = YOLO().net</span><br><span class="line">    inputs_x = torch.randn((<span class="number">1</span>, <span class="number">3</span>, <span class="number">640</span>, <span class="number">640</span>), requires_grad=<span class="literal">True</span>)</span><br><span class="line">    torch.onnx.export(yoloModel, inputs_x, <span class="string">&quot;yolov5_ABAM.onnx&quot;</span>, verbose=<span class="literal">False</span>, opset_version=<span class="number">12</span>,</span><br><span class="line">                      input_names=[<span class="string">&#x27;image&#x27;</span>], output_names=[<span class="string">&#x27;out0&#x27;</span>, <span class="string">&#x27;out1&#x27;</span>, <span class="string">&#x27;out2&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>断点训练&#x2F;继续训练</p>
+<p>例如<code>python train.py --resume runs/train/exp/weights/last.pt</code></p>
+<p>&#x3D;&#x3D;注意需要先CD到对应的工程目录下！&#x3D;&#x3D;</p>
+</li>
+</ul>
+<h3 id="目标期刊"><a href="#目标期刊" class="headerlink" title="目标期刊"></a>目标期刊</h3><ul>
+<li>计算机学报                          ISSN：0254-4164</li>
+<li>北京航空航天大学学报       ISSN：1001-5965</li>
+<li>红外技术                              ISSN：1001-8891</li>
+<li>红外与激光工程                  ISSN：1007-2276</li>
+<li>Romote Sensing                <a target="_blank" rel="noopener" href="https://www.mdpi.com/journal/remotesensing">https://www.mdpi.com/journal/remotesensing</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/YOLO/" rel="tag"># YOLO</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/05/15/%E7%9B%AE%E6%A0%87%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/" rel="next" title="目标跟踪算法">
+      目标跟踪算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#YOLO%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87"><span class="nav-text">YOLO知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87-or-idea"><span class="nav-text">论文 or idea</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#YOLO%E5%85%A8%E7%B3%BB%E5%88%97%E6%B1%87%E6%80%BB"><span class="nav-text">YOLO全系列汇总</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E5%8F%91%E5%B1%95%E6%80%BB%E7%BB%93"><span class="nav-text">小目标检测发展总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AA%A8%E5%B9%B2%E7%BD%91%E7%BB%9C%E6%94%B9%E8%BF%9B"><span class="nav-text">骨干网络改进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Neck%E6%94%B9%E8%BF%9B"><span class="nav-text">Neck改进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IoU%E6%94%B9%E8%BF%9B"><span class="nav-text">IoU改进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#yolo-head%E6%94%B9%E8%BF%9B"><span class="nav-text">yolo head改进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%94%B9%E8%BF%9B"><span class="nav-text">其他改进</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E9%87%87%E6%A0%B7%E7%90%86%E8%AE%BA%E7%9B%B8%E5%85%B3"><span class="nav-text">上下采样理论相关</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE"><span class="nav-text">性能相关设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E5%8F%B0"><span class="nav-text">平台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%88%96%E5%85%B6%E4%BB%96%E8%A6%81%E7%82%B9"><span class="nav-text">代码或其他要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%9C%9F%E5%88%8A"><span class="nav-text">目标期刊</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yuusya"
+      src="/images/touxiang.png">
+  <p class="site-author-name" itemprop="name">Yuusya</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yuusya</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
