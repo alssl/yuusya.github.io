@@ -35,6 +35,70 @@
       </tags>
   </entry>
   <entry>
+    <title>常用Shell指令</title>
+    <url>/2023/05/21/%E5%B8%B8%E7%94%A8Shell%E6%8C%87%E4%BB%A4/</url>
+    <content><![CDATA[<h4 id="更改文件权限命令-——-chmod"><a href="#更改文件权限命令-——-chmod" class="headerlink" title="更改文件权限命令 ——  chmod"></a>更改文件权限命令 ——  <code>chmod</code></h4><p>格式：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod [ugoa...][[+-=][rwxX]...][,...] filename...</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">u 表示该对象的拥有者，g 表示与该对象的拥有者属于同一个群体(group)者，o 表示其他以外的人，a 表示这三者皆是</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">+ 表示增加权限、- 表示取消权限、= 表示唯一设定权限</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">r 表示可读取，w 表示可写入，x 表示可执行，X 表示只有当该对象是个子目录或者该对象已经被设定过为可执行</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-c : 若该对象权限确实已经更改，才显示其更改动作</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-f : 若该对象权限无法被更改也不要显示错误讯息</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-v : 显示权限变更的详细资料</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-R : 对目前目录下的所有对象与子目录进行相同的权限变更(即以递回的方式逐个变更)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--<span class="built_in">help</span> : 显示辅助说明</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--version : 显示版本</span></span><br></pre></td></tr></table></figure>
+
+<p>示范：</p>
+<ol>
+<li><p>将对象 file1.txt 设置为所有人均可读取</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod ugo+r file1.txt</span><br><span class="line">chmod a+r file1.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将档案 file1.txt 与 file2.txt 设为该档案拥有者，与其所属同一个群体者可写入，但其他以外的人则不可写入</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod ug+w,o-w file1.txt file2.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将目前目录下的所有对象与子目录皆设为任何人可读取</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod a+r *</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>此外，还可以使用数字表示权限，起对应关系如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">r=4，w=2，x=1</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">若要rwx属性则4+2+1=7；</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">若要rw-属性则4+2=6；</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">若要r-x属性则4+1=5。</span></span><br></pre></td></tr></table></figure>
+
+<p>示范：</p>
+<ol>
+<li><p>将对象 file1.txt 设置为所有人均有读写和执行权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod a=rwx file1.txt</span><br><span class="line">chmod 777 file1.txt</span><br></pre></td></tr></table></figure></li>
+</ol>
+]]></content>
+      <categories>
+        <category>Linux操作系统</category>
+        <category>基础知识</category>
+      </categories>
+      <tags>
+        <tag>Linux操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始部署Ubuntu系统</title>
+    <url>/2023/05/21/%E4%BB%8E%E9%9B%B6%E9%83%A8%E7%BD%B2Ubuntu%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[<h4 id="参考的博客（后面删掉）"><a href="#参考的博客（后面删掉）" class="headerlink" title="参考的博客（后面删掉）"></a>参考的博客（后面删掉）</h4><p><a href="https://blog.csdn.net/toradexsh/article/details/106099076">https://blog.csdn.net/toradexsh/article/details/106099076</a></p>
+<p><a href="https://blog.csdn.net/zjh1229/article/details/113035997">https://blog.csdn.net/zjh1229/article/details/113035997</a></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>一个完整的Ubuntu BSP包含uboot、Linux Kernel 和 Ubuntu rootfs 三部分</p>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><ol>
+<li><p>执行编写好的 ch-mount.sh 文件时，报错</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/bin/bash^M: 解释器错误: 没有那个文件或目录</span><br></pre></td></tr></table></figure>
+
+<p>原因：由于部署的时候，我先在Windows上写好了sh文件，再通过xftp拷贝到Linux系统下，<strong>然而dos &#x2F; windows 和 unix &#x2F; linux 换行格式编码并不相同：</strong></p>
+<p>dos &#x2F; windows：【\n\r】表示换行</p>
+<p>unix &#x2F; linux：      【\n】表示换行</p>
+<p>解决办法：</p>
+<p>使用shell指令删除【\r】</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sed -i &#x27;s/\r$//&#x27; build.sh</span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;再次运行便可成功&#x3D;&#x3D;</p>
+</li>
+<li></li>
+</ol>
+]]></content>
+      <categories>
+        <category>Linux操作系统</category>
+        <category>实践记录</category>
+      </categories>
+      <tags>
+        <tag>Linux操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>IOCTLs函数</title>
     <url>/2023/05/17/IOCTLs/</url>
     <content><![CDATA[<h2 id="ioctl函数详解"><a href="#ioctl函数详解" class="headerlink" title="ioctl函数详解"></a>ioctl函数详解</h2><h4 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h4><p>ioctl 是设备驱动程序中设备控制接口函数，一个字符设备驱动通常会实现设备打开、关闭、读、写等功能，在一些需要细分的情境下，如果需要扩展新的功能，通常以增设 <code>ioctl()</code> 命令的方式实现。</p>
