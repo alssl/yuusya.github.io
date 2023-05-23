@@ -35,6 +35,31 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux随手记</title>
+    <url>/2023/05/23/%E9%9A%8F%E6%89%8B%E8%AE%B0/</url>
+    <content><![CDATA[<ul>
+<li><h5 id="x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别"><a href="#x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别" class="headerlink" title="&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别"></a>&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别</h5><p>&#x2F;etc&#x2F;hostname中存放的是主机名</p>
+<p>例如：</p>
+<p>ubuntu-tmp</p>
+<p>&#x2F;etc&#x2F;hosts存放的是域名与ip的对应关系，域名和主机名没有任何关系，可以给任意一个IP指定任意一个名字</p>
+<p>例如：</p>
+<p>127.0.0.1 localhost </p>
+<p>127.0.1.1 ubuntu-base</p>
+</li>
+<li><p><strong>Linux账号与权限管理</strong></p>
+<p><a href="https://blog.csdn.net/m0_64651064/article/details/122148092">https://blog.csdn.net/m0_64651064/article/details/122148092</a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux操作系统</category>
+        <category>基础知识</category>
+      </categories>
+      <tags>
+        <tag>Linux操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>常用Shell指令</title>
     <url>/2023/05/21/%E5%B8%B8%E7%94%A8Shell%E6%8C%87%E4%BB%A4/</url>
     <content><![CDATA[<h4 id="更改文件权限命令-——-chmod"><a href="#更改文件权限命令-——-chmod" class="headerlink" title="更改文件权限命令 ——  chmod"></a>更改文件权限命令 ——  <code>chmod</code></h4><p>格式：</p>
@@ -59,6 +84,17 @@
 <li><p>将对象 file1.txt 设置为所有人均有读写和执行权限</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod a=rwx file1.txt</span><br><span class="line">chmod 777 file1.txt</span><br></pre></td></tr></table></figure></li>
 </ol>
+<h4 id="关机、重启命令"><a href="#关机、重启命令" class="headerlink" title="关机、重启命令"></a>关机、重启命令</h4><p>关机命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">shutdown -h now  # 立即关机</span><br><span class="line">shutdown -h 1    # 1分钟后关机</span><br><span class="line">shutdown         # 1分钟后关机</span><br><span class="line">shutdown -r now  # 重启</span><br></pre></td></tr></table></figure>
+
+<p>重启命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">reboot # 重启</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="创建新用户、设置密码"><a href="#创建新用户、设置密码" class="headerlink" title="创建新用户、设置密码"></a>创建新用户、设置密码</h4><p>相关命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">useradd[option] username</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">option选项</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-c: 加上备注文字，备注文字保存在passwd的备注栏中。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-d: 指定用户的家目录（默认用户名目录为/home/用户名，root用户名家目录是/root）</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-D: 变更预设值。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-g: 指定用户所属组</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-e: 指定账号的失效日期，日期格式为MM/DD/YY，例如06/30/12。缺省表示永久有效。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-f: 指定在密码过期后多少天即关闭该账号。如果为0账号立即被停用；如果为-1则账号一直可用。默认值为-1.</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-m: 自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-M: 不要自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-M: 不要自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-u: 指定用户<span class="built_in">id</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-r: 建立系统账号。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-s: 指定用户登入后所使用的shell。默认值为/bin/bash。</span></span><br><span class="line"></span><br><span class="line">passwd [username] # 用于设置/修改用户密码</span><br><span class="line">whoami            # 用于显示当前登录到系统的用户名</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>Linux操作系统</category>
@@ -74,6 +110,11 @@
     <content><![CDATA[<h4 id="参考的博客（后面删掉）"><a href="#参考的博客（后面删掉）" class="headerlink" title="参考的博客（后面删掉）"></a>参考的博客（后面删掉）</h4><p><a href="https://blog.csdn.net/toradexsh/article/details/106099076">https://blog.csdn.net/toradexsh/article/details/106099076</a></p>
 <p><a href="https://blog.csdn.net/zjh1229/article/details/113035997">https://blog.csdn.net/zjh1229/article/details/113035997</a></p>
 <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>一个完整的Ubuntu BSP包含uboot、Linux Kernel 和 Ubuntu rootfs 三部分</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><h4 id="1-移植文件系统ubuntu-rootfs"><a href="#1-移植文件系统ubuntu-rootfs" class="headerlink" title="1. 移植文件系统ubuntu rootfs"></a>1. 移植文件系统ubuntu rootfs</h4><p>（1）下载Ubuntu-Base（文件系统）</p>
+<p>本次移植下载的是Ubuntu-Base 18.04.5 LTS版本的文件系统，官方链接：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://cdimage.ubuntu.com/ubuntu-base/releases/18.04/release/</span><br></pre></td></tr></table></figure>
+
+<p>（2）</p>
 <h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><ol>
 <li><p>执行编写好的 ch-mount.sh 文件时，报错</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/bin/bash^M: 解释器错误: 没有那个文件或目录</span><br></pre></td></tr></table></figure>
@@ -85,9 +126,14 @@
 <p>使用shell指令删除【\r】</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sed -i &#x27;s/\r$//&#x27; build.sh</span><br></pre></td></tr></table></figure>
 
-<p>&#x3D;&#x3D;再次运行便可成功&#x3D;&#x3D;</p>
+<p>再次运行便可成功</p>
 </li>
-<li></li>
+<li><p>挂载ubuntu文件系统后，执行命令<code>apt update</code>，报错如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">遇见的报错1: 无法访问网站</span></span><br><span class="line">Err:1 http://cn.archive.ubuntu.com/ubuntu bionic InRelease Could not resolve &#x27;cn.archive.ubuntu.com&#x27;</span><br><span class="line">Err:2 http://security.ubuntu.com/ubuntu bionic-security InRelease Could not resolve &#x27;security.ubuntu.com&#x27;</span><br><span class="line">Err:3 http://cn.archive.ubuntu.com/ubuntu bionic-updates InRelease Could not resolve &#x27;cn.archive.ubuntu.com&#x27;</span><br><span class="line">Err:4 http://cn.archive.ubuntu.com/ubuntu bionic-backports InRelease Could not resolve &#x27;cn.archive.ubuntu.com&#x27;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">遇到的报错2: 无法创建 /tmp/xxx 文件</span></span><br><span class="line">Get:1 http://security.debian.org/debian-security buster/updates InRelease [65.4 kB]</span><br><span class="line">Err:1 http://security.debian.org/debian-security buster/updates InRelease</span><br><span class="line">  Couldn&#x27;t create temporary file /tmp/apt.conf.IRqbCz for passing config to apt-key</span><br><span class="line">Get:2 http://deb.debian.org/debian buster InRelease [122 kB]</span><br><span class="line">Err:2 http://deb.debian.org/debian buster InRelease</span><br><span class="line">  Couldn&#x27;t create temporary file /tmp/apt.conf.Afcu25 for passing config to apt-key</span><br></pre></td></tr></table></figure>
+
+<p>针对问题1，需要正确的配置<code>/etc/hosts</code>和<code>/etc/hostname</code>，并将本地主机的<code>/etc/resolv.conf</code>拷贝到<code>./etc/resolv.conf</code>，同时保证本地主机能够正常联网，就可以解决</p>
+<p>针对问题2，需要使用<code>chmod 777 /tmp/</code>设置文件夹的权限，才可以在tmp文件中创建新的文件夹及文件，可以解决该问题</p>
+</li>
 </ol>
 ]]></content>
       <categories>
