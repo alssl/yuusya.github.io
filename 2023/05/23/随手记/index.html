@@ -28,7 +28,7 @@
 <meta property="og:description" content="随手记一下学的东西">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-05-23T11:34:47.740Z">
-<meta property="article:modified_time" content="2023-05-23T11:36:07.987Z">
+<meta property="article:modified_time" content="2023-05-25T13:50:22.371Z">
 <meta property="article:author" content="Yuusya">
 <meta property="article:tag" content="Linux操作系统">
 <meta name="twitter:card" content="summary">
@@ -208,10 +208,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-05-23 19:34:47 / 修改时间：19:36:07" itemprop="dateCreated datePublished" datetime="2023-05-23T19:34:47+08:00">2023-05-23</time>
+              <time title="创建时间：2023-05-23 19:34:47" itemprop="dateCreated datePublished" datetime="2023-05-23T19:34:47+08:00">2023-05-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-25 21:50:22" itemprop="dateModified" datetime="2023-05-25T21:50:22+08:00">2023-05-25</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -239,6 +245,15 @@
 
       
         <ul>
+<li><p><strong>使用xshell远程连接主机时, 总是中途断开</strong></p>
+<p>场景说明：</p>
+<p>实验室的一台主机安装了Ubuntu系统，为了方便操作，避免总是转换键盘鼠标和屏幕，使用xshell、xftp以及vscode，通过ssh对主机进行访问，结果发现，每次连接一段时间后，连接总会自动断开。</p>
+<p>问题分析：</p>
+<p>这是因为在主机不接键盘鼠标和屏幕后，过一段时间后（主机中设置的是5分钟）便会自动休眠挂起，以至于无法保持连接，需要禁用主机的休眠挂起</p>
+<p>方法：</p>
+<p><a target="_blank" rel="noopener" href="http://www.taodudu.cc/news/show-4047970.html?action=onClick">http://www.taodudu.cc/news/show-4047970.html?action=onClick</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zoneidc.com/news/6984.html">https://www.zoneidc.com/news/6984.html</a></p>
+</li>
 <li><h5 id="x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别"><a href="#x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别" class="headerlink" title="&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别"></a>&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别</h5><p>&#x2F;etc&#x2F;hostname中存放的是主机名</p>
 <p>例如：</p>
 <p>ubuntu-tmp</p>

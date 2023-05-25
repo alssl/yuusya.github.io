@@ -27,11 +27,13 @@
 <meta property="og:site_name" content="Yuusya NoteBook">
 <meta property="og:description" content="在米尔板卡上重新移植Ubuntu系统, 板卡上的ARM型号为IMX8M mini">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230525155855186.png">
 <meta property="article:published_time" content="2023-05-21T13:05:48.739Z">
-<meta property="article:modified_time" content="2023-05-23T11:34:20.194Z">
+<meta property="article:modified_time" content="2023-05-25T13:44:55.644Z">
 <meta property="article:author" content="Yuusya">
 <meta property="article:tag" content="Linux操作系统">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230525155855186.png">
 
 <link rel="canonical" href="http://example.com/2023/05/21/%E4%BB%8E%E9%9B%B6%E9%83%A8%E7%BD%B2Ubuntu%E7%B3%BB%E7%BB%9F/">
 
@@ -216,7 +218,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-05-23 19:34:20" itemprop="dateModified" datetime="2023-05-23T19:34:20+08:00">2023-05-23</time>
+                <time title="修改时间：2023-05-25 21:44:55" itemprop="dateModified" datetime="2023-05-25T21:44:55+08:00">2023-05-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -251,7 +253,63 @@
 <p>本次移植下载的是Ubuntu-Base 18.04.5 LTS版本的文件系统，官方链接：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://cdimage.ubuntu.com/ubuntu-base/releases/18.04/release/</span><br></pre></td></tr></table></figure>
 
-<p>（2）</p>
+<p>本次下载的是其中<code>ubuntu-base-18.04.5-base-amd64.tar.gz</code>版本</p>
+<p>（2）准备部署主机，创建一个文件夹解压保存</p>
+<p>本次使用的主机是实验室提供的，安装的系统为Ubuntu18.04</p>
+<p>创建一个文件夹<code>ubuntu-base</code>，并将tar.gz压缩包解压至该文件夹</p>
+<p><img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230525155855186.png" alt="image-20230525155855186"></p>
+<p>（3）替换apt安装源（这一步骤为可选步骤）</p>
+<p>默认的apt安装源为国外源，速度较慢，可以替换为国内源，指令如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i &#x27;s|ports.ubuntu.com|mirrors.ustc.edu.cn|g&#x27; ./etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（4）使用脚本在主机上挂载文件系统</p>
+<p>首先需要编写一个ch-mount.sh，用于挂载文件系统，网上找的代码，可用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"> </span><br><span class="line">function mnt() &#123;</span><br><span class="line">    echo &quot;MOUNTING&quot;</span><br><span class="line">    sudo mount -t proc /proc $&#123;2&#125;proc</span><br><span class="line">    sudo mount -t sysfs /sys $&#123;2&#125;sys</span><br><span class="line">    sudo mount -o bind /dev $&#123;2&#125;dev</span><br><span class="line">    sudo mount -o bind /dev/pts $&#123;2&#125;dev/pts</span><br><span class="line"> </span><br><span class="line">    sudo chroot $&#123;2&#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">function umnt() &#123;</span><br><span class="line">    echo &quot;UNMOUNTING&quot;</span><br><span class="line">    sudo umount $&#123;2&#125;proc</span><br><span class="line">    sudo umount $&#123;2&#125;sys</span><br><span class="line">    sudo umount $&#123;2&#125;dev/pts</span><br><span class="line">    sudo umount $&#123;2&#125;dev</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">if [ &quot;$1&quot; == &quot;-m&quot; ] &amp;&amp; [ -n &quot;$2&quot; ] ;</span><br><span class="line">then</span><br><span class="line">    mnt $1 $2</span><br><span class="line">elif [ &quot;$1&quot; == &quot;-u&quot; ] &amp;&amp; [ -n &quot;$2&quot; ];</span><br><span class="line">then</span><br><span class="line">    umnt $1 $2</span><br><span class="line">else</span><br><span class="line">    echo &quot;&quot;</span><br><span class="line">    echo &quot;Either 1&#x27;st, 2&#x27;nd or both parameters were missing&quot;</span><br><span class="line">    echo &quot;&quot;</span><br><span class="line">    echo &quot;1&#x27;st parameter can be one of these: -m(mount) OR -u(umount)&quot;</span><br><span class="line">    echo &quot;2&#x27;nd parameter is the full path of rootfs directory(with trailing &#x27;/&#x27;)&quot;</span><br><span class="line">    echo &quot;&quot;</span><br><span class="line">    echo &quot;For example: ch-mount -m /media/sdcard/&quot;</span><br><span class="line">    echo &quot;&quot;</span><br><span class="line">    echo 1st parameter : $&#123;1&#125;</span><br><span class="line">    echo 2nd parameter : $&#123;2&#125;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>设置sh文件的权限为可执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x ch-mount.sh</span><br></pre></td></tr></table></figure>
+
+<p>由于挂载文件系统时需要在<code>/tmp</code>中创建文件，因此需要更改路径权限，否则会出问题，更改方法如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 /tmp</span><br></pre></td></tr></table></figure>
+
+<p><u>挂载&#x2F;卸载文件系统的指令如下</u></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ./ch-mount.sh -m ubuntu-base/ # 挂载文件系统</span><br><span class="line">sudo ./ch-mount.sh -u ubuntu-base/ # 卸载文件系统</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（4）配置DNS服务器，hosts和hostname</p>
+<p>如果不配置DNS服务器，则无法解析域名，无法使用apt或apt-get安装其他所需的包，配置的方法是将配置主机的相关文件拷贝到文件系统对应位置，命令如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/resolv.conf ./etc/resolv.conf</span><br></pre></td></tr></table></figure>
+
+<p>随后通过<code>./ch-mount.sh</code>相关指令挂载文件系统，在文件系统中配置<code>/etc/hosts</code>和<code>/etc/hostname</code>文件，如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;imx8m-mini&quot; &gt; /etc/hostname</span><br><span class="line">echo &quot;127.0.0.1 localhost&quot; &gt; /etc/hosts</span><br><span class="line">echo &quot;127.0.0.1 imx8mm-mini&quot; &gt;&gt; /etc/hosts  # 这个是之后要通过useradd添加的新用户</span><br></pre></td></tr></table></figure>
+
+<p>配置完之后，才可以使用apt或apt-get下载其他所需的包</p>
+<p>（5）安装常用软件包</p>
+<p>命令如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apt install language-pack-en-base sudo ssh net-tools \</span><br><span class="line">network-manager iputils-ping rsyslog \</span><br><span class="line">bash-completion htop resolvconf dialog \</span><br><span class="line">vim nano v4l-utils alsa-utils git gcc \</span><br><span class="line">less resolvconf autoconf autopoint libtool \</span><br><span class="line">bison flex gtk-doc-tools glib-2.0 \</span><br><span class="line">libglib2.0-dev libpango1.0-dev libatk1.0-dev kmod pciutils -y</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（6）创建新用户，并设置密码</p>
+<p>原始的文件系统中只有一个root用户，可以再新建一个用户，命令如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd -s &#x27;bin/bash&#x27; -m -G adm,sudo imx8mm-mini # 添加用户imx8mm-mini</span><br><span class="line">sudo passwd imx8mm-mini # 设置imx8mm-mini的密码, 执行命令之后可以设置</span><br><span class="line">sudo passwd root        # 设置root的密码, 执行命令之后可以设置</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（7）退出并卸载文件系统</p>
+<p>退出指令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+<p>卸载指令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ./ch-mount.sh -u ubuntu-base/ # 卸载文件系统</span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><ol>
 <li><p>执行编写好的 ch-mount.sh 文件时，报错</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash^M: 解释器错误: 没有那个文件或目录</span><br></pre></td></tr></table></figure>
