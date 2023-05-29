@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="随手记一下学的东西">
+  <meta name="description" content="包含常用的目标跟踪算法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux随手记">
-<meta property="og:url" content="http://example.com/2023/05/23/%E9%9A%8F%E6%89%8B%E8%AE%B0/index.html">
+<meta property="og:title" content="目标跟踪算法">
+<meta property="og:url" content="http://example.com/2023/05/29/%E7%9B%AE%E6%A0%87%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="Yuusya NoteBook">
-<meta property="og:description" content="随手记一下学的东西">
+<meta property="og:description" content="包含常用的目标跟踪算法">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-05-23T11:34:47.740Z">
-<meta property="article:modified_time" content="2023-05-29T14:43:42.476Z">
+<meta property="article:published_time" content="2023-05-29T14:39:50.190Z">
+<meta property="article:modified_time" content="2023-05-16T03:27:56.366Z">
 <meta property="article:author" content="Yuusya">
-<meta property="article:tag" content="Linux操作系统">
+<meta property="article:tag" content="byteTrack">
+<meta property="article:tag" content="SORT">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2023/05/23/%E9%9A%8F%E6%89%8B%E8%AE%B0/">
+<link rel="canonical" href="http://example.com/2023/05/29/%E7%9B%AE%E6%A0%87%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>Linux随手记 | Yuusya NoteBook</title>
+  <title>目标跟踪算法 | Yuusya NoteBook</title>
   
 
 
@@ -185,7 +186,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/23/%E9%9A%8F%E6%89%8B%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/29/%E7%9B%AE%E6%A0%87%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/touxiang.png">
@@ -198,7 +199,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Linux随手记
+          目标跟踪算法
         </h1>
 
         <div class="post-meta">
@@ -209,14 +210,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-05-23 19:34:47" itemprop="dateCreated datePublished" datetime="2023-05-23T19:34:47+08:00">2023-05-23</time>
+              <time title="创建时间：2023-05-29 22:39:50" itemprop="dateCreated datePublished" datetime="2023-05-29T22:39:50+08:00">2023-05-29</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-05-29 22:43:42" itemprop="dateModified" datetime="2023-05-29T22:43:42+08:00">2023-05-29</time>
+                <time title="修改时间：2023-05-16 11:27:56" itemprop="dateModified" datetime="2023-05-16T11:27:56+08:00">2023-05-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -224,16 +225,16 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">Linux操作系统</span></a>
+                  <a href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">毕业设计相关</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">基础知识</span></a>
+                  <a href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1%E7%9B%B8%E5%85%B3/%E7%9B%AE%E6%A0%87%E8%B7%9F%E8%B8%AA%E9%83%A8%E5%88%86/" itemprop="url" rel="index"><span itemprop="name">目标跟踪部分</span></a>
                 </span>
             </span>
 
           
-            <div class="post-description">随手记一下学的东西</div>
+            <div class="post-description">包含常用的目标跟踪算法</div>
 
         </div>
       </header>
@@ -244,31 +245,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <ul>
-<li><p><strong>.bashrc</strong></p>
-</li>
-<li><p><strong>使用xshell远程连接主机时, 总是中途断开</strong></p>
-<p>场景说明：</p>
-<p>实验室的一台主机安装了Ubuntu系统，为了方便操作，避免总是转换键盘鼠标和屏幕，使用xshell、xftp以及vscode，通过ssh对主机进行访问，结果发现，每次连接一段时间后，连接总会自动断开。</p>
-<p>问题分析：</p>
-<p>这是因为在主机不接键盘鼠标和屏幕后，过一段时间后（主机中设置的是5分钟）便会自动休眠挂起，以至于无法保持连接，需要禁用主机的休眠挂起</p>
-<p>方法：</p>
-<p><a target="_blank" rel="noopener" href="http://www.taodudu.cc/news/show-4047970.html?action=onClick">http://www.taodudu.cc/news/show-4047970.html?action=onClick</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.zoneidc.com/news/6984.html">https://www.zoneidc.com/news/6984.html</a></p>
-</li>
-<li><h5 id="x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别"><a href="#x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别" class="headerlink" title="&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别"></a>&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别</h5><p>&#x2F;etc&#x2F;hostname中存放的是主机名</p>
-<p>例如：</p>
-<p>ubuntu-tmp</p>
-<p>&#x2F;etc&#x2F;hosts存放的是域名与ip的对应关系，域名和主机名没有任何关系，可以给任意一个IP指定任意一个名字</p>
-<p>例如：</p>
-<p>127.0.0.1 localhost </p>
-<p>127.0.1.1 ubuntu-base</p>
-</li>
-<li><p><strong>Linux账号与权限管理</strong></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_64651064/article/details/122148092">https://blog.csdn.net/m0_64651064/article/details/122148092</a></p>
-</li>
-</ul>
-
+        <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码错误" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="2d87a01a2217db2f4f9f8bd3ceee66c3bcb02caa207bfccf1607271c749de162">9153a8d3510b3cd9bf07248b663aeaa070c3cf8647da704df1b3f3b9e9b222150a05d8701559293c91c46c4086b062511592011a962649ee1c4af33144623588f76765976c8de5e74b356bc4a421892f4c08a00a81d443bde31823f036ef1f9876852e19a04ccebbd784e02c2bfa05e1d429e8f7c456da1a7a16c8c7c439a9b0c563bbe4acdaed8d1dc6f57bcfda7426d0510c88331a26aee723848f915a98abece9d1eb8a4a03c63b0620c56099ff58bdba38f5b85e6a1fb59a82e53bfb9935006a30874a7544c989a7afdec90986713fa4faed86f2b1da2f882d139e934d82bf67905e7bebed9147e6fa3853c69a52d4f24b4a929f7c1f3ee35ee4255512aa5ae7d984d60da27b751183da892d44852a26d8d3b69e9c6b3a96167de9e9939db9303ca55551716fb32c3f3b7f8694eb4b643b759d2c874b5911aff0bae1d048acf801f119d9ebaf0b3f74e38954fd90d61cb86b03cfa2f69376033ca6df3180efeaf331b765f91696d1f7ddfc3de20f83f48b55aa3885a98a0cf5438606f2c0e93d0dbbfb49282f4158c660e3418557bfe4a872d1330cdc17f8c707f8b12e6cb2162fb7c5f382d735d42c44aff80730a6de04dae9ed72f3b1c0debe1347e3283fdaf0760e8042bc705e72511279cfbbe697ea9373dc2138c528ece25488eed74ad8bdcf08cbd57980d5a0d1ed84c3124516b0379c1543bc54c659c7052fd14f169089b6a24de9735bd36dd6833718441b36d74698eb04149c5d6a3683bef0ad735f8cf158542aba3a624be80e082bedcd7cc6f9476c00bec6dfb7c51132da0ddfa4bb8cf3c43d606081bf08b0d79404de36a04111985f621e0639787b7146e4939650bdb26ca89d39a9a5a25901f487e38fddd33c0514975c1cfee528d14b787aa818cca9a3e4827ab0067ce23e6b4ec1b3880c7fb11e5790ec51d166b201f126da8c6254286ce8eb5b5d82b5f580b39bf834825e3d16efb99aebb48a3b24d6118a0d2452c7ae1ececb83601271e3d118642a24b1a46bcc50025b50b2d3e51d17de7ba45468e12af5f06220d2e12c4d520c770133cad16a427f3f58ffb49564114555e0641ba63ca7010bb40cce51ac85f9a856970b7be35697fd460f0b59a9cbf19eba4a83729c96125dffd57b197daf21156c3baff804d928684bd642265848b62c4a928a7da347e5d11805246ef87484f1c6ec189afcf51da860b6dbcb6d8bb4f58b8d5b15ecc27262f91d78e5c9dd70a7caad2ba6d7b858424a2283b75941a2d9e5dc0057b85c8b185e271baaddc6f6a3ad6b2cfa9ba8dfe728af70cc93292b8332f3e2822722a9c23bcffff839202d92d28c04ef6437afb2b4c3ba79dd348ad56850ea7d29248a0911c9351fc23fb4d114f7b7cc5dc4ed2687f5c76bbc84623fac18af95fca36e583314a1f9a628c0d245d1b79b96c550853ad0372ef3b74add5c75b537ff8abeaf16e2d5a88ca690f640826ddc4ee5686f3dbe527c945a8d29d44f4f6fc7568abd1eff7aa4d4014367a3f8eaa4b563a68d7130ae01f87dbdc098c490e4f92a6c87f88d7621dcf2e9f040daa7b53eaf46dba5d40db2c091d7a4741c939e479fab5c39ad2b1564d3a7a84823a513d82c63bec07f3a8abaca8e44e635c876a2dea2458a78a4afd39a31f9c953dcf6855a7db7bca76175fcb8398da18f7c0b7399c815a37d7ce562a61895b7d8c5dd24a3c3ac1a0f78453c1e968ac71da5b6d23dcc43639de24faa3bf6aa503b4ff2767b8480275e09bbcda37b83c0c1cb04bea749f7e8ff3136de11707c70343e2e1f3c9d33c0e62702705b42755db1a60bf4022734453ad8f3c3c9a85d6a6e4591702f67fb53f7e850624068d24662ef9a8b8647d37cf79e4353b11b8057fa08c786bdfd29abad2b13144ce7bc69ee3bc1c8af33cde87638d864d5b3385eb86d3b76bb3ef209c58fb2903e41237f204dfae4c1dfe54a133a05eff8555bbba7cdb8860dd72ff04a09e95eeca0c50fb6fc1c83032b35459e9ef7ba00e1cf20d54bd30401e6e815acf8a8943c5a965d13faba4ac529ad6c8756e3b295ea44ee07e76a397393b01b581941b92f18aacbb5f3995582854135351daeff02597c5362839afcb459c81ae4efe56cb1a1ea5baace4320cc4ff6871fed9baaaaaf7c9deb4e099e77c2e660687f4cfb8c7a9eebfcb02f0bb322146769088450ae01f4348160a8b65690972793faecbc142744622ad7e10b1868b315dd1e0faedfb3353ad02230e050af5f612b4f105ea0f6944ae3dda963bf80dda0b4bfabb62b54f4b3b718eca34b1a5e7a8e63230f85c24310bbe4a51b104c4282350df3683377a50ba37b6d90b735b9782b1a22f5fc3813515b9beb9ad69126b2b1b4c6f05e2d9256d55ebe64876a8b7598cad804597d37a936b6afb38157a927c9ababf752e06e3589bcaf74431d9d0b7fae098d032da2a109247f793b4f58f0aa9de8de76e4caa5afe39ad23c57a7ddb361c0cd842d52e61c82bdd2ff8e79c92fcf00f48acd706bea4aed250a5cec2824a850ab89caa579417dd38ee11e43612996c0c7c10e2ef97d1ad6d9702ee3d17321bcbd0e2799151447df25b0f301c1143ae93ab22c63b247a33868ed3080257cdba5a6a00e1c6303d0e71d03e68c79d706925e7e874124d29e33ab0973979ba417221505303f5ccadc819e3135b8a5bb0b4bae8979a152ae30a069b6fd9ceb204a805284e6eccc81497e5f0440157cd2f17a7850f0dac2c5035698e840adf8bde8b1572d23aab93d7cf0a68689030eacc79ec7ff8e91e42eaca8fc6d5bf998f34838bc3c1f600a5a4b1179ea69bf712953019a197acd17ed6c8a2b55acad7933b3b6da344799f1469f62c3b80e2222e2df2ba99f591f56d5feb620708a207fa3c02f3df680e590c52f3aaddf4d67a33e821427410db8bd047a5f23bc2e5eb4c651d72495864ccc65908d2ce4df230d018ca9ec1663138b70f569c37691ce2c73f1784256610c25920393834780737d0705ed2578a7d55c6b2d591c6f14519ce9d6c07434097640782cd1abcfd5d4c79743360eb7f8c206a21a93b16f2bbd5a802d5ba502fc3aef7d4386c1d55f74058a799989b7cd6621399ac2e8e89330ea88ee3656f235a132533f81ee6ecdce1eff239f6e272298dc71a52d3bc63212cb4f483fcc59992f89a66229ff299ccae1f711fa8ce7c136f3f268a589f464abec58119d5b19457c14db7421e9ef780fb777aafbf09d359eb88f4a1ac637b89f8fc37e13f1a2300193d06f4b719b30e3a7092add17ccebd6cab63a1892f64e7db2ecc99b227da54eab51fec90c88002b09e77f588beff6957415ea128904c157ce66cc5142419d7f18beb26f08f2ea91e94c9ca6cefcc1e5214d721a0813dc13a775807aa27663506021c30816cc5956584f7876178ef0b37aefef19eb89d1fa1c8a55413df8c4436902753adca737f3ecdc71aae38b70809bcbf669c5d8c554f74c5a0b81fd9374543e51c37dbe5b9b139e0defd86563839c70a3fe22e7cd6c95cc589f62c14455cd3dfadd7cad49777f973903d36549d129812e65a189ac124d7df5de16744f5d242542f3a2e852f22ca051f3f95d2f7b9f32b8a72406bf70566de42216d839db9620b83539712e722f921cd153da5e0c12c9071fcb0b7375986defa883be3b54e69fd768a83a78b4d91fd0df3cf124525654999e6dfbe9157b598e597e0f4b4e66bd8b7339b7244fcc4f44d19008a1db235c168acf8502eec6a6aa098bde17605f9b6b7e0890bae0c016623d814250a28b5e8ec8359e2ffea8d56087967a45629edaf56aea4a5a7c3960773d4ab5e546741994d22c1cce9436c0055ed51f83bce10b82d0d97873c3a36834464636c4abcd55e45639d79975fb39cbba59</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">请输入密码</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
     </div>
 
     
@@ -277,7 +265,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># Linux操作系统</a>
+              <a href="/tags/byteTrack/" rel="tag"># byteTrack</a>
+              <a href="/tags/SORT/" rel="tag"># SORT</a>
           </div>
 
         
@@ -286,13 +275,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/05/21/%E5%B8%B8%E7%94%A8Shell%E6%8C%87%E4%BB%A4/" rel="prev" title="常用Shell指令">
-      <i class="fa fa-chevron-left"></i> 常用Shell指令
+    <a href="/2023/05/29/YOLO%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/" rel="prev" title="YOLO知识储备">
+      <i class="fa fa-chevron-left"></i> YOLO知识储备
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/05/29/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7%E6%B1%87%E6%80%BB/" rel="next" title="从零开始部署Ubuntu系统">
-      从零开始部署Ubuntu系统 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -351,7 +337,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#x2F-etc-x2F-hostname%E4%B8%8E-x2F-etc-x2F-hosts%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
