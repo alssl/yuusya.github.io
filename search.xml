@@ -1,73 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>IOCTLs函数</title>
-    <url>/2023/05/17/IOCTLs/</url>
-    <content><![CDATA[<h2 id="ioctl函数详解"><a href="#ioctl函数详解" class="headerlink" title="ioctl函数详解"></a>ioctl函数详解</h2><h4 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h4><p>ioctl 是设备驱动程序中设备控制接口函数，一个字符设备驱动通常会实现设备打开、关闭、读、写等功能，在一些需要细分的情境下，如果需要扩展新的功能，通常以增设 <code>ioctl()</code> 命令的方式实现。</p>
-<p>该函数从用户空间 -&gt; 内核空间的过程</p>
-<p><img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230517151041751.png" alt="image-20230517151041751"></p>
-<h4 id="2-用户空间ioctl"><a href="#2-用户空间ioctl" class="headerlink" title="2.用户空间ioctl"></a>2.用户空间ioctl</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">ioctl</span><span class="params">(<span class="type">int</span> fd, <span class="type">int</span> cmd, ...)</span>;</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th align="center">参数</th>
-<th align="center">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">fd</td>
-<td align="center">文件描述符</td>
-</tr>
-<tr>
-<td align="center">cmd</td>
-<td align="center">交互协议，设备驱动将根据cmd执行对应操作</td>
-</tr>
-<tr>
-<td align="center">…</td>
-<td align="center">可变参数arg，依赖cmd指定长度以及类型</td>
-</tr>
-</tbody></table>
-<p>ioctl() 函数执行成功时返回 0，失败则返回 -1 并设置全局变量 errorno 值，如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">EBADF: fd不是一个有效的</span><br><span class="line">EFAULT: argp引用了一个不可访问的内存区域</span><br><span class="line">EINVAL: 请求或参数无效 </span><br><span class="line">ENOTTY: fd不是一个字符设备(最常见)</span><br><span class="line">ENOTTY: 指定的请求不适用于描述符fd引用的对象类型</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-驱动程序ioctl"><a href="#3-驱动程序ioctl" class="headerlink" title="3.驱动程序ioctl"></a>3.驱动程序ioctl</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">long</span> (*unlocked_ioctl) (<span class="keyword">struct</span> file *, <span class="type">unsigned</span> <span class="type">int</span>, <span class="type">unsigned</span> <span class="type">long</span>);</span><br><span class="line"><span class="type">long</span> (*compat_ioctl) (<span class="keyword">struct</span> file *, <span class="type">unsigned</span> <span class="type">int</span>, <span class="type">unsigned</span> <span class="type">long</span>);</span><br></pre></td></tr></table></figure>
-
-<p>在新版内核中,<code>unlocked_ioctl()</code>与<code>compat_ioctl()</code>取代了<code>ioctl()</code></p>
-<p>在字符设备驱动开发中，一般情况下只需要实现<code>unlocked_ioctl()</code>函数即可，因为在vfs层的代码直接调用<code>unlocked_ioctl()</code>函数</p>
-<h4 id="4-ioctl-用户与驱动之间的协议"><a href="#4-ioctl-用户与驱动之间的协议" class="headerlink" title="4.ioctl 用户与驱动之间的协议"></a>4.ioctl 用户与驱动之间的协议</h4><p>前文提到 ioctl 方法第二个参数 cmd 为用户与驱动的 “协议”，理论上可以为任意 int 型数据，可以为 0、1、2、3……，但是为了确保该 “协议” 的唯一性，ioctl 命令应该使用更科学严谨的方法赋值，在linux中，提供了一种 ioctl 命令的统一格式，&#x3D;&#x3D;将 32 位 int 型数据划分为四个位段&#x3D;&#x3D;，如下图所示：</p>
-<p><img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230517173924527.png" alt="image-20230517173924527"></p>
-<p>在内核中，提供了宏接口来生成上述的ioctl命令：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// include/uapi/asm-generic/ioctl.h</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC(dir, type, nr, size) \</span></span><br><span class="line"><span class="meta">	(((dir)  &lt;&lt; _IOC_DIRSHIFT)  | \</span></span><br><span class="line"><span class="meta">	 ((type) &lt;&lt; _IOC_TYPESHIFT) | \</span></span><br><span class="line"><span class="meta">	 ((nr)   &lt;&lt; _IOC_NRSHIFT)   | \</span></span><br><span class="line"><span class="meta">	 ((size) &lt;&lt; _IOC_SIZESHIFT))</span></span><br></pre></td></tr></table></figure>
-
-<p><strong><code>dir (direction)</code></strong></p>
-<p>ioctl命令访问模式（数据传输方向），占 2 bits，可选项包括：</p>
-<p><code>_IOC_NONE</code>，<code>_IOC_READ</code>，<code>_IOC_WRITE</code>，<code>_IOC_READ | _IOC_WRITE</code></p>
-<p>分别指示了四种访问模式：无数据，读数据，写数据，读写数据</p>
-<p><strong><code>type(device type)</code></strong></p>
-<p>设备类型，占据 8 bits，可以为任意 char 型字符，例如’a’，’b’，’c’等等，其主要作用是使 ioctl 命令唯一的设备标识</p>
-<p><strong><code>nr(number)</code></strong></p>
-<p>命令编号&#x2F;序数，占据 8 bit，可以为任意 unsigned char 型数据，取值范围 0~255，如果定义了多个 ioctl 命令，通常从 0 开始编号递增</p>
-<p><strong><code>size</code></strong></p>
-<p>涉及到 ioctl 函数 第三个参数 arg ，占据 13bit 或者 14bit（体系相关，arm 架构一般为 14 位），指定了 arg 的数据类型及长度，如果在驱动的 ioctl 实现中不检查，通常可以忽略该参数</p>
-<p>通常，为了方便编程，会使用宏<code>_IOC()</code>衍生的接口来直接定义ioctl命令：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// include/uapi/asm-generic/ioctl.h</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* used to create numbers */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IO(type, nr)           _IOC(_IOC_NONE, (type), (nr), 0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOR(type, nr, size)    _IOC(_IOC_READ, (type), (nr), (_IOC_TYPECHECK(size)))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOW(type, nr, size)    _IOC(_IOC_WRITE, (type), (nr), (_IOC_TYPECHECK(size)))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOWR(type, nr, size)   _IOC(_IOC_READ|_IOC_WRITE,(type),(nr),(_IOC_TYPECHECK(size)))</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">_IO：       定义不带参数的 ioctl 命令</span><br><span class="line">_IOW：      定义带写参数的 ioctl 命令（copy_from_user）</span><br><span class="line">_IOR：      定义带读参数的 ioctl 命令（copy_to_user）</span><br><span class="line">_IOWR：     定义带读写参数的 ioctl 命令</span><br></pre></td></tr></table></figure>
-
-<p>同时，内核还提供了反向解析 ioctl 命令的宏接口：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// include/uapi/asm-generic/ioctl.h</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* used to decode ioctl numbers */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC_DIR(nr)        (((nr) &gt;&gt; _IOC_DIRSHIFT) &amp; _IOC_DIRMASK)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC_TYPE(nr)       (((nr) &gt;&gt; _IOC_TYPESHIFT) &amp; _IOC_TYPEMASK)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC_NR(nr)         (((nr) &gt;&gt; _IOC_NRSHIFT) &amp; _IOC_NRMASK)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC_SIZE(nr)       (((nr) &gt;&gt; _IOC_SIZESHIFT) &amp; _IOC_SIZEMASK)</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux操作系统</category>
-        <category>设备驱动</category>
-      </categories>
-      <tags>
-        <tag>Linux操作系统</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>YOLO知识储备</title>
     <url>/2023/05/29/YOLO%E7%9F%A5%E8%AF%86%E5%82%A8%E5%A4%87/</url>
     <content><![CDATA[<h1 id="YOLO知识储备"><a href="#YOLO知识储备" class="headerlink" title="YOLO知识储备"></a>YOLO知识储备</h1><h3 id="论文-or-idea"><a href="#论文-or-idea" class="headerlink" title="论文 or idea"></a>论文 or idea</h3><ul>
@@ -296,14 +229,106 @@ gard-cam热力图可视化</p>
       </tags>
   </entry>
   <entry>
-    <title>实用工具汇总</title>
-    <url>/2023/05/16/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%BB%8F%E9%AA%8C/</url>
-    <content><![CDATA[]]></content>
+    <title>从零开始部署Ubuntu系统</title>
+    <url>/2023/05/29/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7%E6%B1%87%E6%80%BB/</url>
+    <content><![CDATA[<h4 id="更改文件权限百度云盘不限速下载"><a href="#更改文件权限百度云盘不限速下载" class="headerlink" title="更改文件权限百度云盘不限速下载"></a>更改文件权限百度云盘不限速下载</h4><p>1.所需工具</p>
+<ul>
+<li>IDM（Internet Download Manager） 下载网址：<a href="http://idman.ysepan.com/">http://idman.ysepan.com/</a></li>
+<li>油猴插件 + 基于油猴的百度云连接提取插件</li>
+</ul>
+<p>2.步骤</p>
+<p>（1）进入IDM主页，在选项中，在”手动添加下载任务时使用的用户代理(UA):“中输入netdisk<img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230529215742416.png" alt="image-20230529215742416"></p>
+<p>（2）下载完油猴之后，在插件列表中找一个，可以提取百度云下载链接的，本次下载的是”百度网盘千千助手“</p>
+<p>（3）启动油猴，并启动对应的插件，完成后重新进入百度网盘网页界面，可以看到界面上多了一个”千千下载助手“的标志<img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230529220104797.png" alt="image-20230529220104797"></p>
+<p>（4）点击之后可以获得下载连接，在IDM中新建任务并复制连接，即可开始下载</p>
+]]></content>
       <categories>
-        <category>杂项</category>
+        <category>Linux操作系统</category>
+        <category>实践记录</category>
       </categories>
       <tags>
-        <tag>杂项</tag>
+        <tag>Linux操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux随手记</title>
+    <url>/2023/05/23/%E9%9A%8F%E6%89%8B%E8%AE%B0/</url>
+    <content><![CDATA[<ul>
+<li><p><strong>.bashrc</strong></p>
+</li>
+<li><p><strong>使用xshell远程连接主机时, 总是中途断开</strong></p>
+<p>场景说明：</p>
+<p>实验室的一台主机安装了Ubuntu系统，为了方便操作，避免总是转换键盘鼠标和屏幕，使用xshell、xftp以及vscode，通过ssh对主机进行访问，结果发现，每次连接一段时间后，连接总会自动断开。</p>
+<p>问题分析：</p>
+<p>这是因为在主机不接键盘鼠标和屏幕后，过一段时间后（主机中设置的是5分钟）便会自动休眠挂起，以至于无法保持连接，需要禁用主机的休眠挂起</p>
+<p>方法：</p>
+<p><a href="http://www.taodudu.cc/news/show-4047970.html?action=onClick">http://www.taodudu.cc/news/show-4047970.html?action=onClick</a></p>
+<p><a href="https://www.zoneidc.com/news/6984.html">https://www.zoneidc.com/news/6984.html</a></p>
+</li>
+<li><h5 id="x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别"><a href="#x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别" class="headerlink" title="&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别"></a>&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别</h5><p>&#x2F;etc&#x2F;hostname中存放的是主机名</p>
+<p>例如：</p>
+<p>ubuntu-tmp</p>
+<p>&#x2F;etc&#x2F;hosts存放的是域名与ip的对应关系，域名和主机名没有任何关系，可以给任意一个IP指定任意一个名字</p>
+<p>例如：</p>
+<p>127.0.0.1 localhost </p>
+<p>127.0.1.1 ubuntu-base</p>
+</li>
+<li><p><strong>Linux账号与权限管理</strong></p>
+<p><a href="https://blog.csdn.net/m0_64651064/article/details/122148092">https://blog.csdn.net/m0_64651064/article/details/122148092</a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux操作系统</category>
+        <category>基础知识</category>
+      </categories>
+      <tags>
+        <tag>Linux操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常用Shell指令</title>
+    <url>/2023/05/21/%E5%B8%B8%E7%94%A8Shell%E6%8C%87%E4%BB%A4/</url>
+    <content><![CDATA[<h4 id="更改文件权限命令-——-chmod"><a href="#更改文件权限命令-——-chmod" class="headerlink" title="更改文件权限命令 ——  chmod"></a>更改文件权限命令 ——  <code>chmod</code></h4><p>格式：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod [ugoa...][[+-=][rwxX]...][,...] filename...</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">u 表示该对象的拥有者，g 表示与该对象的拥有者属于同一个群体(group)者，o 表示其他以外的人，a 表示这三者皆是</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">+ 表示增加权限、- 表示取消权限、= 表示唯一设定权限</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">r 表示可读取，w 表示可写入，x 表示可执行，X 表示只有当该对象是个子目录或者该对象已经被设定过为可执行</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-c : 若该对象权限确实已经更改，才显示其更改动作</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-f : 若该对象权限无法被更改也不要显示错误讯息</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-v : 显示权限变更的详细资料</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-R : 对目前目录下的所有对象与子目录进行相同的权限变更(即以递回的方式逐个变更)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--<span class="built_in">help</span> : 显示辅助说明</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--version : 显示版本</span></span><br></pre></td></tr></table></figure>
+
+<p>示范：</p>
+<ol>
+<li><p>将对象 file1.txt 设置为所有人均可读取</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod ugo+r file1.txt</span><br><span class="line">chmod a+r file1.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将档案 file1.txt 与 file2.txt 设为该档案拥有者，与其所属同一个群体者可写入，但其他以外的人则不可写入</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod ug+w,o-w file1.txt file2.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将目前目录下的所有对象与子目录皆设为任何人可读取</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod a+r *</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>此外，还可以使用数字表示权限，起对应关系如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">r=4，w=2，x=1</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">若要rwx属性则4+2+1=7；</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">若要rw-属性则4+2=6；</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">若要r-x属性则4+1=5。</span></span><br></pre></td></tr></table></figure>
+
+<p>示范：</p>
+<ol>
+<li><p>将对象 file1.txt 设置为所有人均有读写和执行权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod a=rwx file1.txt</span><br><span class="line">chmod 777 file1.txt</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="关机、重启命令"><a href="#关机、重启命令" class="headerlink" title="关机、重启命令"></a>关机、重启命令</h4><p>关机命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">shutdown -h now  # 立即关机</span><br><span class="line">shutdown -h 1    # 1分钟后关机</span><br><span class="line">shutdown         # 1分钟后关机</span><br><span class="line">shutdown -r now  # 重启</span><br></pre></td></tr></table></figure>
+
+<p>重启命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">reboot # 重启</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="创建新用户、设置密码"><a href="#创建新用户、设置密码" class="headerlink" title="创建新用户、设置密码"></a>创建新用户、设置密码</h4><p>相关命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">useradd[option] username</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">option选项</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-c: 加上备注文字，备注文字保存在passwd的备注栏中。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-d: 指定用户的家目录（默认用户名目录为/home/用户名，root用户名家目录是/root）</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-D: 变更预设值。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-g: 指定用户所属组</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-e: 指定账号的失效日期，日期格式为MM/DD/YY，例如06/30/12。缺省表示永久有效。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-f: 指定在密码过期后多少天即关闭该账号。如果为0账号立即被停用；如果为-1则账号一直可用。默认值为-1.</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-m: 自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-M: 不要自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-M: 不要自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-u: 指定用户<span class="built_in">id</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-r: 建立系统账号。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-s: 指定用户登入后所使用的shell。默认值为/bin/bash。</span></span><br><span class="line"></span><br><span class="line">passwd [username] # 用于设置/修改用户密码</span><br><span class="line">whoami            # 用于显示当前登录到系统的用户名</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux操作系统</category>
+        <category>基础知识</category>
+      </categories>
+      <tags>
+        <tag>Linux操作系统</tag>
       </tags>
   </entry>
   <entry>
@@ -404,106 +429,81 @@ gard-cam热力图可视化</p>
       </tags>
   </entry>
   <entry>
-    <title>从零开始部署Ubuntu系统</title>
-    <url>/2023/05/29/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7%E6%B1%87%E6%80%BB/</url>
-    <content><![CDATA[<h4 id="更改文件权限百度云盘不限速下载"><a href="#更改文件权限百度云盘不限速下载" class="headerlink" title="更改文件权限百度云盘不限速下载"></a>更改文件权限百度云盘不限速下载</h4><p>1.所需工具</p>
-<ul>
-<li>IDM（Internet Download Manager） 下载网址：<a href="http://idman.ysepan.com/">http://idman.ysepan.com/</a></li>
-<li>油猴插件 + 基于油猴的百度云连接提取插件</li>
-</ul>
-<p>2.步骤</p>
-<p>（1）进入IDM主页，在选项中，在”手动添加下载任务时使用的用户代理(UA):“中输入netdisk<img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230529215742416.png" alt="image-20230529215742416"></p>
-<p>（2）下载完油猴之后，在插件列表中找一个，可以提取百度云下载链接的，本次下载的是”百度网盘千千助手“</p>
-<p>（3）启动油猴，并启动对应的插件，完成后重新进入百度网盘网页界面，可以看到界面上多了一个”千千下载助手“的标志<img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230529220104797.png" alt="image-20230529220104797"></p>
-<p>（4）点击之后可以获得下载连接，在IDM中新建任务并复制连接，即可开始下载</p>
+    <title>IOCTLs函数</title>
+    <url>/2023/05/17/IOCTLs/</url>
+    <content><![CDATA[<h2 id="ioctl函数详解"><a href="#ioctl函数详解" class="headerlink" title="ioctl函数详解"></a>ioctl函数详解</h2><h4 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h4><p>ioctl 是设备驱动程序中设备控制接口函数，一个字符设备驱动通常会实现设备打开、关闭、读、写等功能，在一些需要细分的情境下，如果需要扩展新的功能，通常以增设 <code>ioctl()</code> 命令的方式实现。</p>
+<p>该函数从用户空间 -&gt; 内核空间的过程</p>
+<p><img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230517151041751.png" alt="image-20230517151041751"></p>
+<h4 id="2-用户空间ioctl"><a href="#2-用户空间ioctl" class="headerlink" title="2.用户空间ioctl"></a>2.用户空间ioctl</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/ioctl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">ioctl</span><span class="params">(<span class="type">int</span> fd, <span class="type">int</span> cmd, ...)</span>;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">参数</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">fd</td>
+<td align="center">文件描述符</td>
+</tr>
+<tr>
+<td align="center">cmd</td>
+<td align="center">交互协议，设备驱动将根据cmd执行对应操作</td>
+</tr>
+<tr>
+<td align="center">…</td>
+<td align="center">可变参数arg，依赖cmd指定长度以及类型</td>
+</tr>
+</tbody></table>
+<p>ioctl() 函数执行成功时返回 0，失败则返回 -1 并设置全局变量 errorno 值，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">EBADF: fd不是一个有效的</span><br><span class="line">EFAULT: argp引用了一个不可访问的内存区域</span><br><span class="line">EINVAL: 请求或参数无效 </span><br><span class="line">ENOTTY: fd不是一个字符设备(最常见)</span><br><span class="line">ENOTTY: 指定的请求不适用于描述符fd引用的对象类型</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-驱动程序ioctl"><a href="#3-驱动程序ioctl" class="headerlink" title="3.驱动程序ioctl"></a>3.驱动程序ioctl</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">long</span> (*unlocked_ioctl) (<span class="keyword">struct</span> file *, <span class="type">unsigned</span> <span class="type">int</span>, <span class="type">unsigned</span> <span class="type">long</span>);</span><br><span class="line"><span class="type">long</span> (*compat_ioctl) (<span class="keyword">struct</span> file *, <span class="type">unsigned</span> <span class="type">int</span>, <span class="type">unsigned</span> <span class="type">long</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在新版内核中,<code>unlocked_ioctl()</code>与<code>compat_ioctl()</code>取代了<code>ioctl()</code></p>
+<p>在字符设备驱动开发中，一般情况下只需要实现<code>unlocked_ioctl()</code>函数即可，因为在vfs层的代码直接调用<code>unlocked_ioctl()</code>函数</p>
+<h4 id="4-ioctl-用户与驱动之间的协议"><a href="#4-ioctl-用户与驱动之间的协议" class="headerlink" title="4.ioctl 用户与驱动之间的协议"></a>4.ioctl 用户与驱动之间的协议</h4><p>前文提到 ioctl 方法第二个参数 cmd 为用户与驱动的 “协议”，理论上可以为任意 int 型数据，可以为 0、1、2、3……，但是为了确保该 “协议” 的唯一性，ioctl 命令应该使用更科学严谨的方法赋值，在linux中，提供了一种 ioctl 命令的统一格式，&#x3D;&#x3D;将 32 位 int 型数据划分为四个位段&#x3D;&#x3D;，如下图所示：</p>
+<p><img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230517173924527.png" alt="image-20230517173924527"></p>
+<p>在内核中，提供了宏接口来生成上述的ioctl命令：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// include/uapi/asm-generic/ioctl.h</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC(dir, type, nr, size) \</span></span><br><span class="line"><span class="meta">	(((dir)  &lt;&lt; _IOC_DIRSHIFT)  | \</span></span><br><span class="line"><span class="meta">	 ((type) &lt;&lt; _IOC_TYPESHIFT) | \</span></span><br><span class="line"><span class="meta">	 ((nr)   &lt;&lt; _IOC_NRSHIFT)   | \</span></span><br><span class="line"><span class="meta">	 ((size) &lt;&lt; _IOC_SIZESHIFT))</span></span><br></pre></td></tr></table></figure>
+
+<p><strong><code>dir (direction)</code></strong></p>
+<p>ioctl命令访问模式（数据传输方向），占 2 bits，可选项包括：</p>
+<p><code>_IOC_NONE</code>，<code>_IOC_READ</code>，<code>_IOC_WRITE</code>，<code>_IOC_READ | _IOC_WRITE</code></p>
+<p>分别指示了四种访问模式：无数据，读数据，写数据，读写数据</p>
+<p><strong><code>type(device type)</code></strong></p>
+<p>设备类型，占据 8 bits，可以为任意 char 型字符，例如’a’，’b’，’c’等等，其主要作用是使 ioctl 命令唯一的设备标识</p>
+<p><strong><code>nr(number)</code></strong></p>
+<p>命令编号&#x2F;序数，占据 8 bit，可以为任意 unsigned char 型数据，取值范围 0~255，如果定义了多个 ioctl 命令，通常从 0 开始编号递增</p>
+<p><strong><code>size</code></strong></p>
+<p>涉及到 ioctl 函数 第三个参数 arg ，占据 13bit 或者 14bit（体系相关，arm 架构一般为 14 位），指定了 arg 的数据类型及长度，如果在驱动的 ioctl 实现中不检查，通常可以忽略该参数</p>
+<p>通常，为了方便编程，会使用宏<code>_IOC()</code>衍生的接口来直接定义ioctl命令：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// include/uapi/asm-generic/ioctl.h</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* used to create numbers */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IO(type, nr)           _IOC(_IOC_NONE, (type), (nr), 0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOR(type, nr, size)    _IOC(_IOC_READ, (type), (nr), (_IOC_TYPECHECK(size)))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOW(type, nr, size)    _IOC(_IOC_WRITE, (type), (nr), (_IOC_TYPECHECK(size)))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOWR(type, nr, size)   _IOC(_IOC_READ|_IOC_WRITE,(type),(nr),(_IOC_TYPECHECK(size)))</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">_IO：       定义不带参数的 ioctl 命令</span><br><span class="line">_IOW：      定义带写参数的 ioctl 命令（copy_from_user）</span><br><span class="line">_IOR：      定义带读参数的 ioctl 命令（copy_to_user）</span><br><span class="line">_IOWR：     定义带读写参数的 ioctl 命令</span><br></pre></td></tr></table></figure>
+
+<p>同时，内核还提供了反向解析 ioctl 命令的宏接口：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// include/uapi/asm-generic/ioctl.h</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* used to decode ioctl numbers */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC_DIR(nr)        (((nr) &gt;&gt; _IOC_DIRSHIFT) &amp; _IOC_DIRMASK)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC_TYPE(nr)       (((nr) &gt;&gt; _IOC_TYPESHIFT) &amp; _IOC_TYPEMASK)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC_NR(nr)         (((nr) &gt;&gt; _IOC_NRSHIFT) &amp; _IOC_NRMASK)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _IOC_SIZE(nr)       (((nr) &gt;&gt; _IOC_SIZESHIFT) &amp; _IOC_SIZEMASK)</span></span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>Linux操作系统</category>
-        <category>实践记录</category>
+        <category>设备驱动</category>
       </categories>
       <tags>
         <tag>Linux操作系统</tag>
       </tags>
   </entry>
   <entry>
-    <title>常用Shell指令</title>
-    <url>/2023/05/21/%E5%B8%B8%E7%94%A8Shell%E6%8C%87%E4%BB%A4/</url>
-    <content><![CDATA[<h4 id="更改文件权限命令-——-chmod"><a href="#更改文件权限命令-——-chmod" class="headerlink" title="更改文件权限命令 ——  chmod"></a>更改文件权限命令 ——  <code>chmod</code></h4><p>格式：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod [ugoa...][[+-=][rwxX]...][,...] filename...</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">u 表示该对象的拥有者，g 表示与该对象的拥有者属于同一个群体(group)者，o 表示其他以外的人，a 表示这三者皆是</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">+ 表示增加权限、- 表示取消权限、= 表示唯一设定权限</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">r 表示可读取，w 表示可写入，x 表示可执行，X 表示只有当该对象是个子目录或者该对象已经被设定过为可执行</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-c : 若该对象权限确实已经更改，才显示其更改动作</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-f : 若该对象权限无法被更改也不要显示错误讯息</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-v : 显示权限变更的详细资料</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-R : 对目前目录下的所有对象与子目录进行相同的权限变更(即以递回的方式逐个变更)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--<span class="built_in">help</span> : 显示辅助说明</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">--version : 显示版本</span></span><br></pre></td></tr></table></figure>
-
-<p>示范：</p>
-<ol>
-<li><p>将对象 file1.txt 设置为所有人均可读取</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod ugo+r file1.txt</span><br><span class="line">chmod a+r file1.txt</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>将档案 file1.txt 与 file2.txt 设为该档案拥有者，与其所属同一个群体者可写入，但其他以外的人则不可写入</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod ug+w,o-w file1.txt file2.txt</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>将目前目录下的所有对象与子目录皆设为任何人可读取</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod a+r *</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>此外，还可以使用数字表示权限，起对应关系如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">r=4，w=2，x=1</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">若要rwx属性则4+2+1=7；</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">若要rw-属性则4+2=6；</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">若要r-x属性则4+1=5。</span></span><br></pre></td></tr></table></figure>
-
-<p>示范：</p>
-<ol>
-<li><p>将对象 file1.txt 设置为所有人均有读写和执行权限</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chmod a=rwx file1.txt</span><br><span class="line">chmod 777 file1.txt</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h4 id="关机、重启命令"><a href="#关机、重启命令" class="headerlink" title="关机、重启命令"></a>关机、重启命令</h4><p>关机命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">shutdown -h now  # 立即关机</span><br><span class="line">shutdown -h 1    # 1分钟后关机</span><br><span class="line">shutdown         # 1分钟后关机</span><br><span class="line">shutdown -r now  # 重启</span><br></pre></td></tr></table></figure>
-
-<p>重启命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">reboot # 重启</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="创建新用户、设置密码"><a href="#创建新用户、设置密码" class="headerlink" title="创建新用户、设置密码"></a>创建新用户、设置密码</h4><p>相关命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">useradd[option] username</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">option选项</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-c: 加上备注文字，备注文字保存在passwd的备注栏中。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-d: 指定用户的家目录（默认用户名目录为/home/用户名，root用户名家目录是/root）</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-D: 变更预设值。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-g: 指定用户所属组</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-e: 指定账号的失效日期，日期格式为MM/DD/YY，例如06/30/12。缺省表示永久有效。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-f: 指定在密码过期后多少天即关闭该账号。如果为0账号立即被停用；如果为-1则账号一直可用。默认值为-1.</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-m: 自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-M: 不要自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-M: 不要自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-u: 指定用户<span class="built_in">id</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-r: 建立系统账号。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-s: 指定用户登入后所使用的shell。默认值为/bin/bash。</span></span><br><span class="line"></span><br><span class="line">passwd [username] # 用于设置/修改用户密码</span><br><span class="line">whoami            # 用于显示当前登录到系统的用户名</span><br></pre></td></tr></table></figure>
-
-]]></content>
+    <title>实用工具汇总</title>
+    <url>/2023/05/16/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[]]></content>
       <categories>
-        <category>Linux操作系统</category>
-        <category>基础知识</category>
+        <category>杂项</category>
       </categories>
       <tags>
-        <tag>Linux操作系统</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux随手记</title>
-    <url>/2023/05/23/%E9%9A%8F%E6%89%8B%E8%AE%B0/</url>
-    <content><![CDATA[<ul>
-<li><p><strong>.bashrc</strong></p>
-</li>
-<li><p><strong>使用xshell远程连接主机时, 总是中途断开</strong></p>
-<p>场景说明：</p>
-<p>实验室的一台主机安装了Ubuntu系统，为了方便操作，避免总是转换键盘鼠标和屏幕，使用xshell、xftp以及vscode，通过ssh对主机进行访问，结果发现，每次连接一段时间后，连接总会自动断开。</p>
-<p>问题分析：</p>
-<p>这是因为在主机不接键盘鼠标和屏幕后，过一段时间后（主机中设置的是5分钟）便会自动休眠挂起，以至于无法保持连接，需要禁用主机的休眠挂起</p>
-<p>方法：</p>
-<p><a href="http://www.taodudu.cc/news/show-4047970.html?action=onClick">http://www.taodudu.cc/news/show-4047970.html?action=onClick</a></p>
-<p><a href="https://www.zoneidc.com/news/6984.html">https://www.zoneidc.com/news/6984.html</a></p>
-</li>
-<li><h5 id="x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别"><a href="#x2F-etc-x2F-hostname与-x2F-etc-x2F-hosts的区别" class="headerlink" title="&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别"></a>&#x2F;etc&#x2F;hostname与&#x2F;etc&#x2F;hosts的区别</h5><p>&#x2F;etc&#x2F;hostname中存放的是主机名</p>
-<p>例如：</p>
-<p>ubuntu-tmp</p>
-<p>&#x2F;etc&#x2F;hosts存放的是域名与ip的对应关系，域名和主机名没有任何关系，可以给任意一个IP指定任意一个名字</p>
-<p>例如：</p>
-<p>127.0.0.1 localhost </p>
-<p>127.0.1.1 ubuntu-base</p>
-</li>
-<li><p><strong>Linux账号与权限管理</strong></p>
-<p><a href="https://blog.csdn.net/m0_64651064/article/details/122148092">https://blog.csdn.net/m0_64651064/article/details/122148092</a></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Linux操作系统</category>
-        <category>基础知识</category>
-      </categories>
-      <tags>
-        <tag>Linux操作系统</tag>
+        <tag>杂项</tag>
       </tags>
   </entry>
 </search>
