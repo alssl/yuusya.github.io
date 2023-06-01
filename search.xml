@@ -322,6 +322,90 @@ gard-cam热力图可视化</p>
 <h4 id="创建新用户、设置密码"><a href="#创建新用户、设置密码" class="headerlink" title="创建新用户、设置密码"></a>创建新用户、设置密码</h4><p>相关命令：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">useradd[option] username</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">option选项</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-c: 加上备注文字，备注文字保存在passwd的备注栏中。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-d: 指定用户的家目录（默认用户名目录为/home/用户名，root用户名家目录是/root）</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-D: 变更预设值。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-g: 指定用户所属组</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-e: 指定账号的失效日期，日期格式为MM/DD/YY，例如06/30/12。缺省表示永久有效。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-f: 指定在密码过期后多少天即关闭该账号。如果为0账号立即被停用；如果为-1则账号一直可用。默认值为-1.</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-m: 自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-M: 不要自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-M: 不要自动建立用户的登入目录。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-u: 指定用户<span class="built_in">id</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-r: 建立系统账号。</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-s: 指定用户登入后所使用的shell。默认值为/bin/bash。</span></span><br><span class="line"></span><br><span class="line">passwd [username] # 用于设置/修改用户密码</span><br><span class="line">whoami            # 用于显示当前登录到系统的用户名</span><br></pre></td></tr></table></figure>
 
+
+
+<h4 id="设置环境变量-——-export"><a href="#设置环境变量-——-export" class="headerlink" title="设置环境变量 —— export"></a>设置环境变量 —— <code>export</code></h4><p>格式：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export [option] [variable]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>option</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-f</td>
+<td>代表[variable]为函数名称</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>删除指定的变量variable。变量实际上并未删除，只是不会输出到后续指令的执行环境中</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>列出所有的shell赋予程序的环境变量</td>
+</tr>
+</tbody></table>
+<p>示例：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export REPO_URL=&quot;https://mirrors.tuna.tsinghua.edu.cn/git/git-repo/&quot;</span><br></pre></td></tr></table></figure>
+
+<p>通过上方指令，将repo的镜像源设置为清华源</p>
+<p>另外，单独使用<code>export</code>命令，可以查看（显示）Shell环境变量，如下图所示，其输出内容是bash的所有环境变量<img src="C:/Users/Administrator/AppData/Roaming/Typora/typora-user-images/image-20230531163424448.png" alt="image-20230531163424448"></p>
+<h4 id="执行文件命令-——-source"><a href="#执行文件命令-——-source" class="headerlink" title="执行文件命令 —— source"></a>执行文件命令 —— <code>source</code></h4><p>格式：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source filename [arguments]</span><br><span class="line"></span><br><span class="line">. filename [arguments] # 可以使用 &quot;.&quot; 代替 source命令</span><br></pre></td></tr></table></figure>
+
+<p>source命令是一个内置的shell命令，用于从当前shell会话中的文件读取和执行命令。source命令通常用于保留、更改当前shell中的环境变量。简而言之，source一个脚本，将会在当前shell中运行execute命令。</p>
+<p>作用：</p>
+<ul>
+<li>刷新当前shell环境</li>
+<li>在当前环境使用source执行shell脚本</li>
+<li>从脚本中导入环境中一个shell函数</li>
+<li>从另一个shell脚本中读取变量</li>
+</ul>
+<p>示例：</p>
+<p><strong>1.通过source命令刷新当前的shell环境</strong></p>
+<p>例如，首先在当前的shell环境中定义一个别名，将<code>ls -al</code>定义为<code>ll</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo &quot;alias ll=&#x27;ls -al&#x27;&quot; &gt;&gt; ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>完成定义后，使用<code>source</code>命令刷新当前shell环境：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>2.在当前环境中使用source执行shell脚本</strong></p>
+<p>由于shell脚本不知道当前shell环境中定义的变量，通过source命令可以在shell环境中执行shell脚本，调用shell环境中定义的变量</p>
+<p>例如，在shell环境中定义一个变量website</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">website=yuusya.space	</span><br></pre></td></tr></table></figure>
+
+<p>创建一个脚本，用于打印定义的变量</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">!/bin/bash</span></span><br><span class="line">echo $website</span><br></pre></td></tr></table></figure>
+
+<p>使用source执行脚本，可以正常输出定义的website变量；如果直接使用sh执行脚本，则无法使用变量website</p>
+<p><img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230531204604075.png" alt="image-20230531204604075"></p>
+<p><strong>3.从脚本中导入函数到shell环境中</strong></p>
+<p>首先创建一个脚本fun.sh，其中包含一个函数</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">foo()&#123;</span><br><span class="line">  echo &quot;test function!&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>随后使用source指令执行该脚本，并在终端中执行foo函数，能够成功执行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source fun.sh</span><br><span class="line">foo # 在终端中直接执行</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230531211101365.png" alt="image-20230531211101365"></p>
+<p><strong>4.从另一个脚本中读取变量</strong></p>
+<p>新建一个自带一些变量的脚本var.sh</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">a=1</span><br><span class="line">b=2</span><br><span class="line">c=3</span><br></pre></td></tr></table></figure>
+
+<p>再创建一个脚本read.sh，脚本中使用source加载脚本var.sh，并输出</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">source var.sh</span><br><span class="line">echo $a</span><br><span class="line">echo $b</span><br><span class="line">echo $c</span><br></pre></td></tr></table></figure>
+
+<p>最终结果如下图所示，值得注意的是，如果使用<code>sh read.sh</code>执行脚本，无法成功使用source命令，需要使用<code>bash read.sh</code>，原因未知</p>
+<p><img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230531213141814.png" alt="image-20230531213141814"></p>
+<p><strong>5.读取并执行命令</strong></p>
+<p>例如，先创建一个txt文件，其中有两个命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ip ad</span><br><span class="line">date</span><br></pre></td></tr></table></figure>
+
+<p>随后使用source执行这个文件，结果如下</p>
+<p><img src="https://markdown-img-yuusya.oss-cn-shenzhen.aliyuncs.com/picture/image-20230531213523375.png" alt="image-20230531213523375"></p>
 ]]></content>
       <categories>
         <category>Linux操作系统</category>
